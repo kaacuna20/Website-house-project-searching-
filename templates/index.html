@@ -1,0 +1,33 @@
+{% from "bootstrap5/form.html" import render_form %} {% block content %}
+{% include "header.html" %}
+        <!-- Page Header-->
+		<!-- Main Content-->
+
+	<div id="box">
+		<main class="mb-4">
+		  <div class="container">
+			<div class="row">
+			  <div class="col-lg-8 col-md-10 mx-auto">
+				 <header id="header">
+				  <h1 >House dream</h1>
+					 <h3>Una simple manera de encontrar la casa/apto de tu <br />
+						 sueño con tan solo un click.<br />
+					</h3>
+				</header>
+				      <!-- Adding Flash message here for users trying to register twice -->
+				  {% with messages = get_flashed_messages() %}
+				  {% if messages %}
+				  {% for message in messages %}
+				  <p class="flash" style="color:black">{{ message }}</p>
+				  {% endfor %}
+				  {% endif %}
+				  {% endwith %}
+			  <!--Rendering the registration form here-->
+			  {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+			  </div>
+			</div>
+		  </div>
+		</main>
+	</div>
+		<!-- Footer -->
+{% include "footer.html" %}{% endblock %}

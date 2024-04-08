@@ -1,0 +1,98 @@
+ {% block content %}
+{% include "header.html" %}
+
+
+
+	<div id="box">
+		<!-- Main information-->
+		<div class="container  px-4 py-0 pb-2">
+			<div class="row flex-lg-row-reverse align-items-center g-5 py-0" >
+			  <div class="col-lg-6 col-sm-12 mt-0 py-0 " style="flex: 1">
+				  <img src="{{ project.img_url }}" class="d-block mx-lg-auto img-fluid" alt="{{project.name}}" width="700" height="700" loading="lazy" style="border-radius: 20px">
+			  </div>
+			  <div class="col-lg-6 col-sm-12 mt-0 py-0 " style="flex: 1">
+				  <div class="row py-2">
+					<div class="col p-4 d-flex flex-column position-static">
+					  <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3  pt-3">{{ project.name }}</h1>
+					</div>
+					<div class="col-auto d-none d-lg-block">
+					  <img src="{{ project.logo }}" style="border-radius: 8px;" class="d-block mx-lg-auto img-fluid" width="200" height="200">
+					</div>
+				  </div>
+				<p class="lead"  style="text-align: justify">{{ project.description }}</p>
+				  <p class="lead" >Punto de venta: {{ project.address_sale }}.</p>
+				<div class="d-grid gap-2 d-md-flex justify-content-md-start">
+				  <a href="{{project.url_map}}"><button type="button" class="btn btn-success">Ubicación</button></a>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		 <!-- Features-->
+		<div class="container px-4 py-0 border rounded" id="icon-grid">
+    <h2 class="pb-2 border-bottom">Características</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-0">
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#bootstrap"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Municipio de residencia</h3>
+			  <p>El proyecto se encuentra en la localidad de {{project.city}}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#cpu-fill"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Precio actual</h3>
+			  <p>Los apartamentos para el presente año están valorizados en $ {{project.price}}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#calendar3"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Constructora</h3>
+			  <p>La constructora encargada del proyecto es la constructora {{ project.company.upper() }}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#home"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Dirección</h3>
+			  <p>El projecto se encuentra en {{project.address }}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#speedometer2"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Area construida</h3>
+			  <p>los apartamentos cuentan regularmente con un espacio de {{ project.area }} m2.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#toggles2"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Tipo de vivienda</h3>
+			  <p>Este proyecto cuentan con vivienda tipo {{project.type}}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#geo-fill"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Contacto</h3>
+			  <p>Contactate al siguiente numero: (+57) {{project.contact}}.</p>
+			</div>
+		  </div>
+		  <div class="col d-flex align-items-start">
+			<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#tools"></use></svg>
+			<div>
+			  <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Estrato {{project.stratum_city}}</h3>
+			  <p>Esta información corresponde al estrato actual y puede variar a la fecha de entrega del inmueble. </p>
+			</div>
+		  </div>
+		</div>
+			  <div class="d-grid gap-2 d-md-flex justify-content-md-start py-3 px-5">
+				  <a href="{{ project.url_website }}"><button type="button" class="btn btn-success">Ir al sitio web</button></a>
+			  </div>
+	  </div>
+	</div>
+		<!-- Footer -->
+{% include "footer.html" %}{% endblock %}
