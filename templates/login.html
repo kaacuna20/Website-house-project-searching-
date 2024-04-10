@@ -11,6 +11,14 @@
          <header id="header">
           <h1>Iniciar sección</h1>
         </header>
+              <!-- Adding Flash message here for users trying to register twice -->
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <p class="flash" style="color:black">{{ message }}</p>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
       <!--Rendering the registration form here-->
       {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>

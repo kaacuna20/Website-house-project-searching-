@@ -27,7 +27,7 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block; }
 
-#box {padding: 6em 3.5em 3.5em 3.5em;
+#box {padding: 5em 3.5em 3.5em 3.5em;
 }
 
 p {
@@ -807,6 +807,18 @@ button,
 @media screen and (max-width: 480px) {
   #header {
     margin: 0 0 1em 0; } }
+
+
+#signup-form_n{
+  width: 25em;
+  display: -moz-flex;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  position: relative;
+}
+
+
 
 /* Signup Form */
 #signup-form {

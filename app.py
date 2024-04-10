@@ -1,12 +1,14 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap5
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, URL
-from flask_ckeditor import CKEditorField
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from forms import LoginForm, RegisterForm, CommentForm
+from flask_ckeditor import CKEditor
+from functools import wraps
+import os
 
 app = Flask(__name__)
 
@@ -14,6 +16,18 @@ app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
 # Create bootstrap from flask
 bootstrap = Bootstrap5(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'  # Set login view for unauthorized access
+
+ckeditor = CKEditor(app)
+
+# User loader callback for Flask-Login (fetches user from database)
+@login_manager.user_loader
+def load_user(user_id):
+    # Fetch user data from database or other source
+    return User.query.get(user_id)
 
 
 # CREATE DATABASE
@@ -57,7 +71,7 @@ class Project(db.Model):
 
 
 # Create a User table for all your registered users
-class User(db.Model):  # UserMixin,
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
@@ -120,46 +134,19 @@ with app.app_context():
     db.session.add(new_project)
     db.session.commit()"""
 
-# Create a form to register new users
-class RegisterForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Contraseña", validators=[DataRequired()])
-    username = StringField("Usuario", validators=[DataRequired()])
-    submit = SubmitField("Registrar")
-
-
-# Create a form to login existing users
-class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Contraseña", validators=[DataRequired()])
-    submit = SubmitField("Acceder")
-
-
-# Create a form to add comments
-class CommentForm(FlaskForm):
-    comment_text = CKEditorField("Commentarios", validators=[DataRequired()])
-    submit = SubmitField("Comentar")
-
-
-class Search(FlaskForm):
-    search_project = StringField("Buscar projecto por localidad, ciudad, o constructora, sino escribe 'todos'",
-                                 validators=[DataRequired()])
-    submit = SubmitField("Buscar")
-
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    search = Search()
-    if search.validate_on_submit():
+    if request.method == "POST":
         # Input in homepage
-        projects_by_item = search.search_project.data
+        projects_by_item = request.form["search"].title()
         # Projects filtered by location
         projects_by_location = db.session.execute(db.select(Project).where(Project.location == projects_by_item)).scalars().all()
         # Projects filtered by city
         projects_by_city = db.session.execute(db.select(Project).where(Project.city == projects_by_item)).scalars().all()
         # Projects filtered by company
         project_by_company = db.session.execute(db.select(Project).where(Project.company == projects_by_item)).scalars().all()
-        if projects_by_item == "todos":
+        if projects_by_item == "Todos":
             all_projects = db.session.execute(db.select(Project)).scalars().all()
             return render_template("all_projects.html", all_projects=all_projects)
         elif projects_by_location:
@@ -171,23 +158,55 @@ def home():
         else:
             flash("No se encontraron resultados a su búsqueda!")
             return redirect(url_for('home'))
-    return render_template("index.html", form=search)
+    return render_template("index.html")
 
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        # Check if user email is already present in the database.
+        user = db.session.execute(db.select(User).where(User.email == form.email.data)).scalar()
+        if user:
+            # User already exists
+            flash("Ya estas registrado, ve e inicia sección!")
+            return redirect(url_for('login'))
+
+        new_user = User(
+            email=form.email.data,
+            password=generate_password_hash(
+                password=form.password.data,
+                method="pbkdf2:sha256",
+                salt_length=8
+            ),
+            username=form.username.data
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        # This line will authenticate the user with Flask-Login
+        login_user(new_user)
         return redirect(url_for("home"))
-    return render_template("register.html", form=form)  # , current_user=current_user)
+    return render_template("register.html", form=form, current_user=current_user)
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        return redirect(url_for("home"))
-    return render_template("login.html", form=form)  # , current_user=current_user)
+        password = form.password.data
+        user = db.session.execute(db.select(User).where(User.email == form.email.data)).scalar()
+        # Email doesn't exist
+        if not user:
+            flash("El correo no existe, por favor trate de nuevo.")
+            return redirect(url_for('register'))
+        # Password incorrect
+        elif not check_password_hash(user.password, password):
+            flash('Contraseña incorrecta, por favor trate de nuevo.')
+            return redirect(url_for('login'))
+        else:
+            login_user(user)
+            return redirect(url_for("home"))
+    return render_template("login.html", form=form, current_user=current_user)
 
 
 @app.route("/about")
@@ -198,13 +217,53 @@ def about():
 @app.route('/projects')
 def get_projects():
     projects = db.session.execute(db.select(Project)).scalars().all()
-    return render_template("all_projects.html", all_projects=projects)  # , current_user=current_user)
+    return render_template("all_projects.html", all_projects=projects, current_user=current_user)
 
 
-@app.route("/<int:project_id>")
+@app.route("/<int:project_id>",  methods=["GET", "POST"])
 def show_project(project_id):
     requested_project = db.get_or_404(Project, project_id)
-    return render_template("project.html", project=requested_project)#, current_user=current_user, form=comment_form)
+    # Adding the CommentForm to the route
+    comment_form = CommentForm()
+    # Only allow logged-in users to comment on projects
+    if comment_form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("Debes iniciar sección para poder comentar.")
+            return redirect(url_for("login"))
+
+        new_comment = Comment(
+            text=comment_form.comment_text.data,
+            comment_user=current_user,
+            parent_project=requested_project
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+    return render_template("project.html", project=requested_project, current_user=current_user, form=comment_form)
+
+
+@app.route("/<int:user_id>/<int:project_id>")
+def save_project_user(user_id, project_id):
+    user = db.get_or_404(User, user_id)
+    project = db.get_or_404(Project, project_id)
+    user.saved_projects.append(project)
+    db.session.commit()
+    return redirect(url_for("user_projects", user_id=user_id))
+
+
+@app.route("/user")
+@login_required
+def user_projects():
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    saved_projects = user.saved_projects.all()
+    #db.session.execute(db.select(Project).where(Project.company == projects_by_item)).scalars().all()
+    return render_template("projects_by_user.html", my_projects=saved_projects, current_user=current_user)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":

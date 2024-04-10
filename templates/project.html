@@ -1,9 +1,9 @@
- {% block content %}
+ {% from "bootstrap5/form.html" import render_form %} {% block content %}
 {% include "header.html" %}
 
 
 
-	<div id="box">
+	<div id="box" class="mt-5">
 		<!-- Main information-->
 		<div class="container  px-4 py-0 pb-2">
 			<div class="row flex-lg-row-reverse align-items-center g-5 py-0" >
@@ -93,6 +93,31 @@
 				  <a href="{{ project.url_website }}"><button type="button" class="btn btn-success">Ir al sitio web</button></a>
 			  </div>
 	  </div>
+
+		   <!-- Comments Area -->
+        <!-- Load the CKEditor -->
+        {{ ckeditor.load() }}
+        <!-- Configure it with the name of the form field from CommentForm -->
+        {{ ckeditor.config(name='comment_text') }}
+        <!-- Create the wtf quick form from CommentForm -->
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+		 <div class="my-3 p-3 bg-body rounded shadow-sm" style="opacity:0.7;">
+			<h6 class="border-bottom pb-2 mb-0">Comentarios recientes</h6>
+			 {% for comment in project.comments: %}
+			<div class="d-flex text-body-secondary pt-3">
+                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+			  <p class="pb-3 mb-0 small lh-sm border-bottom" >
+				<strong class="d-block text-gray-dark">@{{comment.comment_user.username}}</strong>
+				{{comment.text|safe}}
+			  </p>
+			</div>
+			 {% endfor %}
+			<small class="d-block text-end mt-3">
+			  <a href="#">All updates</a>
+			</small>
+		  </div>
+
+
 	</div>
 		<!-- Footer -->
 {% include "footer.html" %}{% endblock %}
