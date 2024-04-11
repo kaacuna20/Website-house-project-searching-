@@ -1,0 +1,673 @@
+{% include "header.html" %}
+
+<!-- Main Content-->
+
+<div id="box" class="mt-5">
+     <header id="header">
+					<h1 style="text-align: center">Housing Projects API</h1>
+					<p style="text-align: justify"> This section was made for developers use the API to get or
+                        post housing projects from Atlantico-Colombia.
+                        Type of request used mainly for suggestions (based on incomplete names).
+                        user just can make request if registered and logged in section.
+					</p>
+
+        </header>
+    <div class="album py-5 bg-body-tertiary" style="opacity:0.8;">
+    <div class="container" >
+        <div><span class="servers-title">Servers</span><div class="servers"><label for="servers"><select><option value="https://api.tequila.kiwi.com/">http://127.0.0.1:5002/</option></select></label></div></div>
+          <div>
+              <div class="accordion" id="accordionExample" >
+                <!-- GET request for all projects-->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <span class="sc-fzoaKM diFeSb" style="color: rgb(0, 127, 49); font-size: 16px;line-height: 28px;">GET</span>
+                           __/all
+                      </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                        <div class="overflow-hidden content-section" id="content-get-characters">
+            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+
+                            <pre><code class="bash hljs">
+              <span class="hljs-comment"># Here is a curl example</span>
+              import requests
+
+              url = "http://127.0.0.1:5002/all?api_key={api_key}"
+
+              payload={}
+              headers = {}
+
+              response = requests.request("GET", url, headers=headers, data=payload)
+
+              print(response.text)
+
+            </code></pre>
+            <p>
+                To get characters you need to make a GET call to the following url, for example:<br>
+                user api_key=UserSecretAPIKey; the endpoint is:
+                <code class="higlighted break-word">http://127.0.0.1:5002/all?api_key=UserSecretAPIKey</code>
+            </p>
+            <br>
+            <pre><code class="json hljs">
+              Result example :
+                CODE: 200
+{
+    "projects": [
+        {
+            "address": "Calle. 110 No.43 - 331, Manzana 13",
+            "address_sale": "BC Empresarial, Cra 53 No. 110 esquina, Local 5",
+            "area": "55",
+            "city": "Puerto Colombia",
+            "company": "AMARILO",
+            "contact": "3103157550",
+            "description": "Palmar de la Ciénaga es un conjunto residencial de vivienda tipo VIS (Vivienda de Interés Social) que se desarrolla en la Manzana Residencial 5 Lote 2 del Plan Parcial \"Ribera Mallorquín\" ubicado en el municipio de Puerto Colombia",
+            "id": 1,
+            "img_url": "https://www.estrenarvivienda.com/sites/default/files/node-project/field-project-images/palmar-de-la-cienaga-amarilo-aprovecha-aptos-en-barranquilla-amarilo_1.jpg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://www.estrenarvivienda.com/palmar-de-la-cienaga/puerto-colombia",
+            "name": "Palmar de Cienaga",
+            "price": "175.500.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "https://www.google.com/maps/dir//11.020188,-74.838088",
+            "url_website": "https://amarilo.com.co/proyecto/palmar-cienaga-ciudad-mallorquin?utm_source=Zav&utm_medium=Landing+mallorquin&utm_campaign=cpc"
+        },
+        {
+            "address": "Calle. 110 No.43 - 331, Manzana 13",
+            "address_sale": "Ediempresarial, Cra 53 #110 Esquina, Local 5",
+            "area": "68 - 114",
+            "city": "Barranquilla",
+            "company": "Constructora Bolivar",
+            "contact": "3103157550",
+            "description": "Cisne de Alameda del Río es un proyecto de vivienda en Barranquilla con diseño natural y cálido, encuentra torres de 15 pisos de altura en conjunto cerrado. Pensando en todos los integrantes de la familia hemos diseñado zonas sociales como piscinas para adultos y niños, zona de juegos infantiles, zonas verdes, cancha infantil, coworking, BBQ y más.",
+            "id": 2,
+            "img_url": "https://cdn.constructoracolpatria.com/landings/lanai/galeria/img-2.jpg",
+            "location": "Alameda del rio",
+            "logo": "https://cbolivarstoragedev.blob.core.windows.net/fileslive-2023-20-11/imagenes/proyectos/logo/logo-constructorabolivar-cisne_0.png",
+            "name": "Conjunto Cisne",
+            "price": "350.020.000 - 556.960.000",
+            "stratum_city": "4",
+            "type": "NO VIS",
+            "url_map": "https://www.google.com/maps/dir//11.006408,-74.842512",
+            "url_website": "https://www.constructorabolivar.com/proyectos-vivienda/barranquilla/cisne-alameda-del-rio?gad_source=1&gclid=EAIaIQobChMInLH5hvOyhQMV6ZtaBR1eSwTDEAAYASAAEgIFKPD_BwE"
+        },
+        {
+            "address": "Calle. 110 No.43 - 331, Manzana 13",
+            "address_sale": "Ediempresarial, Cra 53 #110 Esquina, Local 5",
+            "area": "56",
+            "city": "Puerto Colombia",
+            "company": "AMARILO",
+            "contact": "3103157550",
+            "description": "Mirador de la Ciénaga es un conjunto residencial de vivienda tipo Tope VIS (Vivienda de Interés Social) que se desarrolla en la Manzana Residencial 5 Lote 1 del Plan Parcial 'Ribera Mallorquín 'bicado en el municipio de Puerto Colombia.",
+            "id": 3,
+            "img_url": "https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-07/mirador_de_la_cienaga_-_ciudad_mallorquin_apartamentos-en-barranquilla-amarilo-mirador-aprovecha-nuevos-aptos-a.jpeg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-09/37.%20LOGO%20MIRADOR%20DE%20LA%20CIENAGA.jpg",
+            "name": "Mirador de Cienaga",
+            "price": "175.500.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "https://www.google.com/maps/dir//11.006408,-74.842512",
+            "url_website": "https://amarilo.com.co/proyecto/mirador-cienaga-ciudad-mallorquin?utm_source=landing%20mallorquin&utm_medium=cpc"
+        },
+        {
+            "address": "Calle 100 Con Carrera 52 Esquina - Barrio La Castellana",
+            "address_sale": "Cra. 29 No.  45 – 45",
+            "area": "46.99",
+            "city": "Puerto Colombia",
+            "company": "MARVAL",
+            "contact": "(607) 633 3987",
+            "description": "El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico. ",
+            "id": 4,
+            "img_url": "https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://www.estrenarvivienda.com/sites/default/files/node-project/field-project-logo/xlogo-aquanova.jpg.pagespeed.ic.WecfNUndU5.webp",
+            "name": "Aquanova",
+            "price": "175.000.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "http://maps.google.com/?q=norte de barranquilla - sala de ventas vip - calle 100 con carrera 52 esquina - barrio la castellana",
+            "url_website": "https://marval.com.co/proyecto/aquanova/"
+        }
+    ]
+}
+                CODE: 403
+{
+    "error": {
+        "Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."
+    }
+}
+                </code></pre>
+            <h4>QUERY PARAMETERS</h4>
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Field</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>api_key</td>
+                <td>string</td>
+                <td>your API key</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+                      </div>
+                    </div>
+
+                  <!-- GET request for projects by city-->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <span class="sc-fzoaKM diFeSb" style="color: rgb(0, 127, 49); font-size: 16px;line-height: 28px;">GET</span>
+                           __/search
+                      </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                            <div class="overflow-hidden content-section" id="content-get-characters">
+            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+
+                            <pre><code class="bash hljs">
+              <span class="hljs-comment"># Here is a curl example</span>
+                import requests
+
+                url = "http://127.0.0.1:5002/search?api_key={api_key}&city={city}"
+
+                payload={}
+                headers = {}
+
+                response = requests.request("GET", url, headers=headers, data=payload)
+
+                print(response.text)
+
+            </code></pre>
+            <p>
+                To get characters you need to make a GET call to the following url, for example :<br>
+                user search by city "Puerto Colombia", the endpoint is:
+                <code class="higlighted break-word">http://127.0.0.1:5002/search?api_key=UserSecretAPIKey&city=Puerto Colombia</code>
+            </p>
+            <br>
+            <pre><code class="json hljs">
+              Result example :
+                CODE: 200
+{
+    "projects": [
+        {
+            "address": "Calle. 110 No.43 - 331, Manzana 13",
+            "address_sale": "BC Empresarial, Cra 53 No. 110 esquina, Local 5",
+            "area": "55",
+            "city": "Puerto Colombia",
+            "company": "AMARILO",
+            "contact": "3103157550",
+            "description": "Palmar de la Ciénaga es un conjunto residencial de vivienda tipo VIS (Vivienda de Interés Social) que se desarrolla en la Manzana Residencial 5 Lote 2 del Plan Parcial \"Ribera Mallorquín\" ubicado en el municipio de Puerto Colombia",
+            "id": 1,
+            "img_url": "https://www.estrenarvivienda.com/sites/default/files/node-project/field-project-images/palmar-de-la-cienaga-amarilo-aprovecha-aptos-en-barranquilla-amarilo_1.jpg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://www.estrenarvivienda.com/palmar-de-la-cienaga/puerto-colombia",
+            "name": "Palmar de Cienaga",
+            "price": "175.500.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "https://www.google.com/maps/dir//11.020188,-74.838088",
+            "url_website": "https://amarilo.com.co/proyecto/palmar-cienaga-ciudad-mallorquin?utm_source=Zav&utm_medium=Landing+mallorquin&utm_campaign=cpc"
+        },
+        {
+            "address": "Calle. 110 No.43 - 331, Manzana 13",
+            "address_sale": "Ediempresarial, Cra 53 #110 Esquina, Local 5",
+            "area": "56",
+            "city": "Puerto Colombia",
+            "company": "AMARILO",
+            "contact": "3103157550",
+            "description": "Mirador de la Ciénaga es un conjunto residencial de vivienda tipo Tope VIS (Vivienda de Interés Social) que se desarrolla en la Manzana Residencial 5 Lote 1 del Plan Parcial 'Ribera Mallorquín 'bicado en el municipio de Puerto Colombia.",
+            "id": 3,
+            "img_url": "https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-07/mirador_de_la_cienaga_-_ciudad_mallorquin_apartamentos-en-barranquilla-amarilo-mirador-aprovecha-nuevos-aptos-a.jpeg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-09/37.%20LOGO%20MIRADOR%20DE%20LA%20CIENAGA.jpg",
+            "name": "Mirador de Cienaga",
+            "price": "175.500.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "https://www.google.com/maps/dir//11.006408,-74.842512",
+            "url_website": "https://amarilo.com.co/proyecto/mirador-cienaga-ciudad-mallorquin?utm_source=landing%20mallorquin&utm_medium=cpc"
+        },
+        {
+            "address": "Calle 100 Con Carrera 52 Esquina - Barrio La Castellana",
+            "address_sale": "Cra. 29 No.  45 – 45",
+            "area": "46.99",
+            "city": "Puerto Colombia",
+            "company": "MARVAL",
+            "contact": "(607) 633 3987",
+            "description": "El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico. ",
+            "id": 4,
+            "img_url": "https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg",
+            "location": "Ciudad Mallorquín",
+            "logo": "https://www.estrenarvivienda.com/sites/default/files/node-project/field-project-logo/xlogo-aquanova.jpg.pagespeed.ic.WecfNUndU5.webp",
+            "name": "Aquanova",
+            "price": "175.000.000",
+            "stratum_city": "3",
+            "type": "VIS",
+            "url_map": "http://maps.google.com/?q=norte de barranquilla - sala de ventas vip - calle 100 con carrera 52 esquina - barrio la castellana",
+            "url_website": "https://marval.com.co/proyecto/aquanova/"
+        }
+    ]
+}
+                CODE: 404
+{
+    "error": {
+        "Not found": "Sorry, we don't have a project at that location."
+    }
+}
+                CODE: 403
+{
+    "error": {
+        "Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."
+    }
+}
+                </code></pre>
+            <h4>QUERY PARAMETERS</h4>
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Field</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>api_key</td>
+                <td>string</td>
+                <td>your API key</td>
+              </tr>
+             <tr>
+                <th scope="row">2</th>
+                <td>city</td>
+                <td>string</td>
+                <td>city select</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+                    </div>
+                  </div>
+
+                    <!-- PATH request for change price item of project-->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="sc-fzoaKM diFeSb" style="color: rgb(98, 52, 151); font-size: 16px; line-height: 28px;">PATH</span>
+                            __/update-price
+
+                      </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+ <div class="overflow-hidden content-section" id="content-get-characters">
+            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+
+                            <pre><code class="bash hljs">
+              <span class="hljs-comment"># Here is a curl example</span>
+               import requests
+
+                url = "http://127.0.0.1:5002/update-price/?api_key={api_key}&new_price={new_price}&project_id={project_id}"
+
+                payload={}
+                headers = {}
+
+                response = requests.request("PATCH", url, headers=headers, data=payload)
+
+                print(response.text)
+
+            </code></pre>
+            <p>
+                To get characters you need to make to PATH call to the following url, for example :<br>
+                administrator user patch new_price=350.020.000 - 556.960.000, the endpoint is:
+                <code class="higlighted break-word">http://127.0.0.1:5002/update-price/?api_key=TopSecretAPIKey&new_price=350.020.000 - 556.960.000&project_id=2</code>
+            </p>
+            <br>
+            <pre><code class="json hljs">
+              Result example :
+                CODE: 200
+{
+    "response":{
+            "success": "Successfully update the price."
+        }
+}
+                CODE: 404
+{
+    "error": {
+        "Not Found": "Sorry a project with that id was not found in the database."
+    }
+}
+                CODE: 403
+{
+    "error": {
+        "Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."
+    }
+}
+                </code></pre>
+            <h4>QUERY PARAMETERS</h4>
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Field</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>api_key</td>
+                <td>string</td>
+                <td>your API key</td>
+              </tr>
+             <tr>
+                <th scope="row">2</th>
+                <td>new_price</td>
+                <td>string</td>
+                <td>new price to update about select project</td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+
+                    </div>
+                  </div>
+                    <!-- POST request for all projects-->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                       <span class="sc-fzoaKM diFeSb" style="color: rgb(173, 122, 3); font-size: 16px;line-height: 28px;">POST</span>
+                           __/add
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+                                          <div class="overflow-hidden content-section" id="content-get-characters">
+            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+
+                            <pre><code class="bash hljs">
+              <span class="hljs-comment"># Here is a curl example</span>
+                import requests
+
+                url = "http://127.0.0.1:5002/add?api_key={api_key}&name={name}&logo={logo}&location={location}&city={city}&company={company}
+                                &address={address}&url_map={url_map}&address_sale={address_sale}&contact={contact}&stratum={stratum}
+                                &area={area}&price={price}&type={type}&description={description} &url_website={url_website}"
+
+                payload={}
+                headers = {}
+
+                response = requests.request("POST", url, headers=headers, data=payload)
+
+                print(response.text)
+
+            </code></pre>
+            <p>
+                To get characters you need to make a POST call to the following url, for example:<br>
+                user post api_key=UserSecretAPIKey, name=Aquanova, logo=https://ciudadmallorquin.com/images/logos/logo-aquanova.png,
+                location=Ciudad Mallorquín, city=Puerto colombia, company=marval, address=Calle 100 con carrera 52 esquina - Barrio La Castellana
+                ,url_map=http://maps.google.com/?q=Norte%20de%20Barranquilla%20-%20Sala%20de%20Ventas%20VIP%20-%20Calle%20100%20con%20carrera%2052%20esquina%20-%20Barrio%20La%20Castellana,
+                address_sale=Cra. 29 No.  45 – 45, contact=(607) 633 3987, stratum=3, area=46.99, price=175.000.000,
+                type=vis, img_url=https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg,
+                description="El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico." y
+                url_website=https://marval.com.co/proyecto/aquanova/. the endpoint is:<br>
+                <code class="higlighted break-word">http://127.0.0.1:5002/add?api_key=TopSecretAPIKey&name=Aquanova&logo=https://ciudadmallorquin.com/images/logos/logo-aquanova.png&location=Ciudad Mallorquín&city=Puerto colombia&company=marval&address=Calle 100 con carrera 52 esquina - Barrio La Castellana&url_map=http://maps.google.com/?q=Norte%20de%20Barranquilla%20-%20Sala%20de%20Ventas%20VIP%20-%20Calle%20100%20con%20carrera%2052%20esquina%20-%20Barrio%20La%20Castellana&address_sale=Cra. 29 No.  45 – 45&contact=(607) 633 3987&stratum=3&area=46.99&price=175.000.000&type=vis&img_url=https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg&description=El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico. &url_website=https://marval.com.co/proyecto/aquanova/</code>
+            </p>
+            <br>
+            <pre><code class="json hljs">
+              Result example :
+                CODE: 200
+{
+    "response":{
+            "success": "Successfully added the new project."
+        }
+}
+                CODE: 500
+{
+    "error": {
+        "Internal Server Error": "Sorry, but this project already exist in our database."
+    }
+}
+                CODE: 403
+{
+    "error": {
+        "Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."
+    }
+}
+                </code></pre>
+            <h4>QUERY PARAMETERS</h4>
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Field</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>api_key</td>
+                <td>string</td>
+                <td>your API key</td>
+              </tr>
+                  <tr>
+                <th scope="row">2</th>
+                <td>name</td>
+                <td>string</td>
+                <td>name of project</td>
+              </tr>
+                  <tr>
+                <th scope="row">3</th>
+                <td>logo</td>
+                <td>string</td>
+                <td>url_img logo of project</td>
+              </tr>
+                  <tr>
+                <th scope="row">4</th>
+                <td>location</td>
+                <td>string</td>
+                <td>location of project</td>
+              </tr>
+                  <tr>
+                <th scope="row">5</th>
+                <td>city</td>
+                <td>string</td>
+                <td>city from project</td>
+              </tr>
+                  <tr>
+                <th scope="row">6</th>
+                <td>company</td>
+                <td>string</td>
+                <td>company built project</td>
+              </tr>
+                  <tr>
+                <th scope="row">7</th>
+                <td>address</td>
+                <td>string</td>
+                <td>address of project</td>
+              </tr>
+                  <tr>
+                <th scope="row">8</th>
+                <td>url_map</td>
+                <td>string</td>
+                <td>url of ubication of project (Google Map)</td>
+              </tr>
+                  <tr>
+                <th scope="row">9</th>
+                <td>address_sale</td>
+                <td>string</td>
+                <td>address of sales point</td>
+              </tr>
+                  <tr>
+                <th scope="row">10</th>
+                <td>contact</td>
+                <td>string</td>
+                <td>number contact with company</td>
+              </tr>
+                  <tr>
+                <th scope="row">11</th>
+                <td>stratum</td>
+                <td>string</td>
+                <td>stratum of sector</td>
+              </tr>
+                  <tr>
+                <th scope="row">12</th>
+                <td>area</td>
+                <td>string</td>
+                <td>Area space of department in m2</td>
+              </tr>
+                  <tr>
+                <th scope="row">13</th>
+                <td>price</td>
+                <td>string</td>
+                <td>current cost of department</td>
+              </tr>
+                  <tr>
+                <th scope="row">14</th>
+                <td>type</td>
+                <td>string</td>
+                <td>whether project is VIS or NO VIS</td>
+              </tr>
+                  <tr>
+                <th scope="row">15</th>
+                <td>url_img</td>
+                <td>string</td>
+                <td>image of background of set of buildings</td>
+              </tr>
+                  <tr>
+                <th scope="row">16</th>
+                <td>description</td>
+                <td>string</td>
+                <td>summary about the project</td>
+              </tr>
+                  <tr>
+                <th scope="row">17</th>
+                <td>url_website</td>
+                <td>string</td>
+                <td>url of website of project</td>
+              </tr>
+
+
+            </tbody>
+          </table>
+
+        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- DELETE request for all projects-->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                       <span class="sc-fzoaKM diFeSb" style="color: rgb(142, 26, 16); font-size: 16px;line-height: 28px;">DELETE</span>
+                           __/project-closed
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">
+
+                            <pre><code class="bash hljs">
+              <span class="hljs-comment"># Here is a curl example</span>
+        import requests
+
+        url = "http://127.0.0.1:5002/project-closed?api_key={api_key}&project_id={project_id}"
+
+        payload={}
+        headers = {}
+
+        response = requests.request("DELETE", url, headers=headers, data=payload)
+
+        print(response.text)
+
+            </code></pre>
+            <p>
+                To get characters you need to make a DELETE call to the following url, for example:<br>
+                administrator user delete project with id_project=5, the endpoint is:
+                    <code class="higlighted break-word">http://127.0.0.1:5002/project-closed?api_key=TopSecretAPIKey&project_id=5</code>
+            </p>
+            <br>
+            <pre><code class="json hljs">
+              Result example :
+                CODE: 200
+{
+    "response":{
+            "success": "Successfully deleted the project from the database."
+        }
+}
+                CODE: 404
+{
+    "error": {
+        "Not Found": "Sorry a project with that id was not found in the database."
+    }
+}
+                CODE: 403
+{
+    "error": {
+        "Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."
+    }
+}
+                </code></pre>
+            <h4>QUERY PARAMETERS</h4>
+            <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Field</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>api_key</td>
+                <td>string</td>
+                <td>your API key</td>
+              </tr>
+             <tr>
+                <th scope="row">2</th>
+                <td>project_id</td>
+                <td>integer</td>
+                <td>id of project from database</td>
+              </tr>
+
+
+            </tbody>
+          </table>
+
+        </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% include "footer.html" %}
+

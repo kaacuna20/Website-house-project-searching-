@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, abort, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
@@ -22,6 +22,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'  # Set login view for unauthorized access
 
 ckeditor = CKEditor(app)
+
 
 # User loader callback for Flask-Login (fetches user from database)
 @login_manager.user_loader
@@ -69,6 +70,12 @@ class Project(db.Model):
     def __repr__(self):
         return f'<Project {self.name}>'
 
+    def to_dict(self):
+        # Loop through each column in the data record in a dictionary
+        # where the key is the name of the column
+        # and the value is the value of the column
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
 
 # Create a User table for all your registered users
 class User(db.Model, UserMixin):
@@ -112,27 +119,6 @@ class Comment(db.Model):
 
 with app.app_context():
     db.create_all()
-"""with app.app_context():
-    new_project = Project(
-        name="Mirador de Cienaga",
-        location="Ciudad Mallorquín",
-        logo="https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-09/37.%20LOGO%20MIRADOR%20DE%20LA%20CIENAGA.jpg",
-        city="Puerto Colombia",
-        company="AMARILO",
-        address="Calle. 110 No.43 - 331, Manzana 13",
-        url_map="https://www.google.com/maps/dir//11.006408,-74.842512",
-        address_sale="Ediempresarial, Cra 53 #110 Esquina, Local 5",
-        contact="3103157550",
-        stratum_city="3",
-        area="56",
-        price="175.500.000",
-        type="VIS",
-        img_url="https://media1.amarilo.com.co/website/s3fs-public/proyectos/2023-07/mirador_de_la_cienaga_-_ciudad_mallorquin_apartamentos-en-barranquilla-amarilo-mirador-aprovecha-nuevos-aptos-a.jpeg",
-        description="Mirador de la Ciénaga es un conjunto residencial de vivienda tipo Tope VIS (Vivienda de Interés Social) que se desarrolla en la Manzana Residencial 5 Lote 1 del Plan Parcial 'Ribera Mallorquín 'bicado en el municipio de Puerto Colombia.",
-        url_website="https://amarilo.com.co/proyecto/mirador-cienaga-ciudad-mallorquin?utm_source=landing%20mallorquin&utm_medium=cpc"
-    )
-    db.session.add(new_project)
-    db.session.commit()"""
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -256,7 +242,6 @@ def user_projects():
     user_id = current_user.id
     user = User.query.get(user_id)
     saved_projects = user.saved_projects.all()
-    #db.session.execute(db.select(Project).where(Project.company == projects_by_item)).scalars().all()
     return render_template("projects_by_user.html", my_projects=saved_projects, current_user=current_user)
 
 
@@ -266,5 +251,117 @@ def logout():
     return redirect(url_for('home'))
 
 
+@app.route("/api")
+def documentation_api():
+    return render_template("documentation_api.html")
+
+# CREATE API SECTION
+# Create an admin-only decorator
+def admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # If id is not 1 then return abort with 403 error
+        if current_user.id != 1:
+            return abort(403)
+        # Otherwise continue with the route function
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+# HTTP GET - Read Record
+@app.route("/all")
+def get_all_projects():
+    api_key = request.args.get("api_key")
+    if api_key == "TopSecretAPIKey":
+        projects = db.session.execute(db.select(Project)).scalars().all()
+        return jsonify(projects=[project.to_dict() for project in projects])
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
+
+@app.route("/search")
+def search_project():
+    api_key = request.args.get("api_key")
+    if api_key == "TopSecretAPIKey":
+        # search by location
+        query_loc = request.args.get("city").title()
+        locate_project = db.session.execute(db.select(Project).where(Project.city == query_loc)).scalars().all()
+        if locate_project:
+            return jsonify(projects=[project.to_dict() for project in locate_project])
+        else:
+            return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}),  404
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
+
+# HTTP POST - Create Record
+@app.route("/add", methods=["POST"])
+def post_new_project():
+    api_key = request.args.get("api_key")
+    if api_key == "TopSecretAPIKey":
+        try:
+            new_project = Project(
+                name=request.args.get("name").title(),
+                logo=request.args.get("logo").lower(),
+                location=request.args.get("location").title(),
+                city=request.args.get("city").title(),
+                company=request.args.get("company").upper(),
+                address=request.args.get("address").title(),
+                url_map=request.args.get("url_map").lower(),
+                address_sale=request.args.get("address_sale").title(),
+                contact=request.args.get("contact").lower(),
+                stratum_city=request.args.get("stratum").title(),
+                area=request.args.get("area").lower(),
+                price=request.args.get("price").lower(),
+                type=request.args.get("type").upper(),
+                img_url=request.args.get("img_url").lower(),
+                description=request.args.get("description"),
+                url_website=request.args.get("url_website").lower(),
+            )
+            db.session.add(new_project)
+            db.session.commit()
+            return jsonify(response={"success": "Successfully added the new project."})
+        except Exception:
+            return jsonify(error={"Internal Server Error": "Sorry, but this project already exist on the database."}), 500
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
+
+# HTTP PUT/PATCH - Update Record
+@app.route("/update-price", methods=["PATCH"])
+def update_new_cafe_price():
+    api_key = request.args.get("api_key")
+    project_id = int(request.args.get("project_id"))
+    if api_key == "TopSecretAPIKey":
+        price_to_update = db.get_or_404(Project, project_id)
+        if price_to_update:
+            price_to_update.price = request.args.get("new_price")
+            db.session.commit()
+            return jsonify(response={"success": "Successfully update the price."}), 200
+        else:
+            return jsonify(error={"Not found": "Sorry a cafe with that id was not found in the database."}), 404
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
+
+# HTTP DELETE - Delete Record
+@app.route("/project-closed", methods=["DELETE"])
+def delete_project():
+    api_key = request.args.get("api_key")
+    project_id = int(request.args.get("project_id"))
+    if api_key == "TopSecretAPIKey":
+        try:
+            project_to_delete = db.get_or_404(Project, project_id)
+            db.session.delete(project_to_delete)
+            db.session.commit()
+            return jsonify(response={"success": "Successfully deleted the project from the database."}), 200
+        except Exception:
+            return jsonify(error={"Not Found": "Sorry a project with that id was not found in the database."}), 404
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
+
