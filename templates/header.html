@@ -28,7 +28,7 @@
 	<body class="is-preload">
 	<!-- Header Navbar -->
 		<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -75,11 +75,11 @@
 					</form>
 			  		<div class="dropdown text-end ">
 					  <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true">
-						<img src="static/images/foto2.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+						<img src="{{current_user.photo}}" alt="mdo" width="32" height="32" class="rounded-circle">
 					  </a>
 					  <ul class="dropdown-menu text-small show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 34px);" data-popper-placement="bottom-end">
 						  <li><a class="dropdown-item" href="{{ url_for('user_projects') }}">Mis projectos</a></li>
-						  <li><a class="dropdown-item" href="#">Editar perfil</a></li>
+						  <li><a class="dropdown-item" href="{{ url_for('edit_profile') }}">Editar perfil</a></li>
 						  <li><hr class="dropdown-divider"></li>
 						  <li><a class="dropdown-item" href="{{ url_for('logout') }}">Cerrar Sección</a></li>
 					  </ul>

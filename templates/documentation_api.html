@@ -22,7 +22,7 @@
                     <h2 class="accordion-header">
                       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         <span class="sc-fzoaKM diFeSb" style="color: rgb(0, 127, 49); font-size: 16px;line-height: 28px;">GET</span>
-                           __/all
+                           __/location
                       </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
@@ -34,7 +34,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
               import requests
 
-              url = "http://127.0.0.1:5002/all?api_key={api_key}"
+              url = "http://127.0.0.1:5002/location?api_key={apikey}&loc={location}"
 
               payload={}
               headers = {}
@@ -47,7 +47,7 @@
             <p>
                 To get characters you need to make a GET call to the following url, for example:<br>
                 user api_key=UserSecretAPIKey; the endpoint is:
-                <code class="higlighted break-word">http://127.0.0.1:5002/all?api_key=UserSecretAPIKey</code>
+                <code class="higlighted break-word">http://127.0.0.1:5002/location?api_key=UserSecretApikey&loc=ciudad mallorquin</code>
             </p>
             <br>
             <pre><code class="json hljs">
@@ -157,6 +157,12 @@
                 <td>string</td>
                 <td>your API key</td>
               </tr>
+              <tr>
+                <th scope="row">1</th>
+                <td>location</td>
+                <td>string</td>
+                <td>location select</td>
+              </tr>
 
             </tbody>
           </table>
@@ -170,19 +176,19 @@
                     <h2 class="accordion-header">
                       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         <span class="sc-fzoaKM diFeSb" style="color: rgb(0, 127, 49); font-size: 16px;line-height: 28px;">GET</span>
-                           __/search
+                           __/city
                       </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                             <div class="overflow-hidden content-section" id="content-get-characters">
-            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+            <p>The search route will search the project database for a project that matches the city queried. Use the loc parameter to pass a location name.</p>
 
                             <pre><code class="bash hljs">
               <span class="hljs-comment"># Here is a curl example</span>
                 import requests
 
-                url = "http://127.0.0.1:5002/search?api_key={api_key}&city={city}"
+                url = "http://127.0.0.1:5002/city?api_key={api_key}&city={city}"
 
                 payload={}
                 headers = {}
@@ -195,7 +201,7 @@
             <p>
                 To get characters you need to make a GET call to the following url, for example :<br>
                 user search by city "Puerto Colombia", the endpoint is:
-                <code class="higlighted break-word">http://127.0.0.1:5002/search?api_key=UserSecretAPIKey&city=Puerto Colombia</code>
+                <code class="higlighted break-word">http://127.0.0.1:5002/city?api_key=UserSecretAPIKey&city=Puerto Colombia</code>
             </p>
             <br>
             <pre><code class="json hljs">
@@ -317,8 +323,11 @@
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
- <div class="overflow-hidden content-section" id="content-get-characters">
-            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+                        <div class="overflow-hidden content-section" id="content-get-characters">
+                            <p>
+                                Update the price of sale department at a particular project due to price change every year or during current year. Using the id and new_price parameters.
+                                This request just is allowed by administration user.
+                            </p>
 
                             <pre><code class="bash hljs">
               <span class="hljs-comment"># Here is a curl example</span>
@@ -336,7 +345,7 @@
             </code></pre>
             <p>
                 To get characters you need to make to PATH call to the following url, for example :<br>
-                administrator user patch new_price=350.020.000 - 556.960.000, the endpoint is:
+                administrator user patch new_price=350.020.000 - 556.960.000, the endpoint is:<br>
                 <code class="higlighted break-word">http://127.0.0.1:5002/update-price/?api_key=TopSecretAPIKey&new_price=350.020.000 - 556.960.000&project_id=2</code>
             </p>
             <br>
@@ -384,6 +393,12 @@
                 <td>string</td>
                 <td>new price to update about select project</td>
               </tr>
+              <tr>
+                  <th scope="row">3</th>
+                  <td>project_id</td>
+                  <td>integer</td>
+                  <td>id of project from database</td>
+             </tr>
 
             </tbody>
           </table>
@@ -403,7 +418,7 @@
                     <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
                                           <div class="overflow-hidden content-section" id="content-get-characters">
-            <p>This route returns a json with the data from all projects in the database. Just need to type the apikey.</p>
+            <p>Adds a new project entry to the database. Requires authentication with api-key parameter.</p>
 
                             <pre><code class="bash hljs">
               <span class="hljs-comment"># Here is a curl example</span>
@@ -587,7 +602,7 @@
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                       <div class="accordion-body">
-
+                                        <p>Deletes a project from the database. You will need to provide the id of the project to delete as a route. This request just is allowed by administration user.</p>
                             <pre><code class="bash hljs">
               <span class="hljs-comment"># Here is a curl example</span>
         import requests

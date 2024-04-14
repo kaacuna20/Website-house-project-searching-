@@ -160,7 +160,7 @@
 								$submit.disabled = false;
 
 							// Show message.
-								$message._show('success', 'Buscando!');
+								$message._show('success', 'Enviando');
 								//$message._show('failure', 'Something went wrong. Please try again.');
 
 						}, 750);

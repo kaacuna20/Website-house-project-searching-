@@ -21,6 +21,7 @@
       {% endwith %}
       <!--Rendering the registration form here-->
       {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <a href="{{ url_for('forgot_password') }}"><button type="button" class="btn btn-link">Olvidaste la contraseña</button></a>
       </div>
     </div>
   </div>
