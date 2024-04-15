@@ -21,7 +21,7 @@
 			<link
 			  rel="icon"
 			  type="image/x-icon"
-			  href="{{ url_for('static', filename='images/favicon.ico') }}"
+			  href="{{ url_for('static', filename='images/logofavicon.jpg') }}"
 			/>
 		{% endblock %}
 	</head>
@@ -47,7 +47,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-			<a class="nav-link" href="{{url_for('about')}}">Misión</a>
+			<a class="nav-link" href="{{url_for('about')}}">About</a>
 		</li>
         	<li class="nav-item dropdown">
 				  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -55,14 +55,13 @@
 				  </a>
 				  <ul class="dropdown-menu ">
 					<li><a class="dropdown-item" href="{{ url_for('documentation_api') }}">Documentation</a></li>
-					<li><a class="dropdown-item" href="#">API key</a></li>
+					  {% if current_user.is_authenticated: %}
+					<li><a class="dropdown-item" href="{{ url_for('get_api_key') }}">Generate API key</a></li>
+					  {% endif %}
 				  </ul>
 				</li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-    <!-- Load Bootstrap-Flask CSS here -->
+	  </ul>
+    			<!-- Load Bootstrap-Flask CSS here -->
 				{% if not current_user.is_authenticated: %}
 				<div class="text-end">
 				   <a href="{{url_for('login')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar sección</button></a>

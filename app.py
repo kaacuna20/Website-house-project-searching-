@@ -2,16 +2,18 @@ from flask import Flask, render_template, redirect, url_for, flash, request, abo
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text
+from sqlalchemy import Integer, String, Text, DateTime
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import smtplib
-from flask_pyjwt import JWT, jwt
-# from .models import User
+import jwt
+from secrets import token_urlsafe
 from flask_ckeditor import CKEditor
 from functools import wraps
-from forms import LoginForm, RegisterForm, CommentForm, ChangePasswordForm, RandomPassword # export the form's class
+from forms import LoginForm, RegisterForm, CommentForm, ChangePasswordForm # export the form's class
+import datetime
+import pytz
 import os
 
 
@@ -36,11 +38,6 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-SECRET_API_KEY = "dskjvbsldjvbhlasdfvhjbd"
-
-
-# Initialize JWT manager (replace with your app instance)
-# jwt = JWT(app, secret_key=SECRET_API_KEY)
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
@@ -99,6 +96,8 @@ class User(db.Model, UserMixin):
     lastname: Mapped[str] = mapped_column(String(100))
     city: Mapped[str] = mapped_column(String(100))
     photo: Mapped[str] = mapped_column(String, nullable=False)
+    api_key: Mapped[str] = mapped_column(String, unique=True, nullable=True)
+    api_key_expires: Mapped[str] = mapped_column(DateTime, nullable=True)
     # Parent relationship: "comment_user" refers to the comment_user property in the Comment class.
     comments = relationship("Comment", back_populates="comment_user")
 
@@ -317,7 +316,6 @@ def change_password():
 # FORGOT PASSWORD
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
-    random_password = RandomPassword()
     if request.method == "POST":
         user = db.session.execute(db.select(User).where(User.email == request.form["email"].lower())).scalar()
         # Verify email correspond to a user registered
@@ -326,7 +324,7 @@ def forgot_password():
             return redirect(url_for('forgot_password'))
 
         # generate a new and temporal password
-        temporal_password = random_password.generate_password()
+        temporal_password = f"Tu nueva contraseña es: {token_urlsafe(8)}"
         # store this password on database
         new_password = generate_password_hash(
             password=temporal_password,
@@ -336,7 +334,15 @@ def forgot_password():
         user.password = new_password
         db.session.commit()
         # send the password for email
-        connection = smtplib.SMTP("smtp.gmail.com")
+        # split the email after "@" to get the host of email
+        stmp = request.form["email"].lower().split("@")[1]
+        # create a dictionary to know what smtp.host correspond the email
+        host_emails = {
+            "gmail.com": "smtp.gmail.com",
+            "hotmail.com": "smtp.live.com"
+        }
+        # put the right location host of email
+        connection = smtplib.SMTP(host_emails[stmp])
         connection.starttls()
         connection.login(user="casaacuna47@gmail.com", password="cwieaggngjpanpet")
         connection.sendmail(
@@ -390,116 +396,127 @@ def documentation_api():
     return render_template("documentation_api.html")
 
 
-# Create an admin-only decorator
-def admin_only(f):
+def token_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        # If id is not 1 then return abort with 403 error
-        if current_user.id != 1:
-            return abort(403)
-        # Otherwise continue with the route function
+    def decorated(*args, **kwargs):
+        token = request.args.get("api_key")
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 403
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        except Exception:
+            return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key or refresh it."}), 403
         return f(*args, **kwargs)
+    return decorated
 
-    return decorated_function
+
+@app.route("/api_key")
+def get_api_key():
+    return render_template("api_key.html", current_user=current_user)
+
+
+@app.route('/api/token/generate')
+def generate_token():
+    tz = pytz.timezone("America/Bogota")
+    user_id = current_user.id
+    user = db.get_or_404(User, user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    token = jwt.encode({
+        'user': user.username,
+        'exp': datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
+    }, app.config['SECRET_KEY'], algorithm="HS256")
+
+    user.api_key = token
+    user.api_key_expires = datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
+    db.session.commit()
+
+    return jsonify({'api_key': token})
 
 
 # HTTP GET - Read Record
 @app.route("/location")
+@token_required
 def project_by_location():
-    api_key = request.args.get("api_key")
-    if api_key == "TopSecretAPIKey":
-        # search by location
-        query_loc = request.args.get("loc").title()
-        locate_project = db.session.execute(db.select(Project).where(Project.location == query_loc)).scalars().all()
-        if locate_project:
-            return jsonify(projects=[project.to_dict() for project in locate_project])
-        else:
-            return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
+    # search by location
+    query_loc = request.args.get("loc").title()
+    locate_project = db.session.execute(db.select(Project).where(Project.location == query_loc)).scalars().all()
+    if locate_project:
+        return jsonify(projects=[project.to_dict() for project in locate_project])
     else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+        return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
 
 
 @app.route("/city")
+@token_required
 def project_by_city():
-    api_key = request.args.get("api_key")
-    if api_key == "TopSecretAPIKey":
-        # search by location
-        query_city = request.args.get("city").title()
-        locate_project = db.session.execute(db.select(Project).where(Project.city == query_city)).scalars().all()
-        if locate_project:
-            return jsonify(projects=[project.to_dict() for project in locate_project])
-        else:
-            return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
+    # search by city
+    query_city = request.args.get("city").title()
+    locate_project = db.session.execute(db.select(Project).where(Project.city == query_city)).scalars().all()
+    if locate_project:
+        return jsonify(projects=[project.to_dict() for project in locate_project])
     else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+        return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
 
 
 # HTTP POST - Create Record
 @app.route("/add", methods=["POST"])
+@token_required
 def post_new_project():
-    api_key = request.args.get("api_key")
-    if api_key == "TopSecretAPIKey":
-        try:
-            new_project = Project(
-                name=request.args.get("name").title(),
-                logo=request.args.get("logo").lower(),
-                location=request.args.get("location").title(),
-                city=request.args.get("city").title(),
-                company=request.args.get("company").upper(),
-                address=request.args.get("address").title(),
-                url_map=request.args.get("url_map").lower(),
-                address_sale=request.args.get("address_sale").title(),
-                contact=request.args.get("contact").lower(),
-                stratum_city=request.args.get("stratum").title(),
-                area=request.args.get("area").lower(),
-                price=request.args.get("price").lower(),
-                type=request.args.get("type").upper(),
-                img_url=request.args.get("img_url").lower(),
-                description=request.args.get("description"),
-                url_website=request.args.get("url_website").lower(),
-            )
-            db.session.add(new_project)
-            db.session.commit()
-            return jsonify(response={"success": "Successfully added the new project."})
-        except Exception:
-            return jsonify(
-                error={"Internal Server Error": "Sorry, but this project already exist on the database."}), 500
-    else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+    try:
+        new_project = Project(
+            name=request.args.get("name").title(),
+            logo=request.args.get("logo").lower(),
+            location=request.args.get("location").title(),
+            city=request.args.get("city").title(),
+            company=request.args.get("company").upper(),
+            address=request.args.get("address").title(),
+            url_map=request.args.get("url_map").lower(),
+            address_sale=request.args.get("address_sale").title(),
+            contact=request.args.get("contact").lower(),
+            stratum_city=request.args.get("stratum").title(),
+            area=request.args.get("area").lower(),
+            price=request.args.get("price").lower(),
+            type=request.args.get("type").upper(),
+            img_url=request.args.get("img_url").lower(),
+            description=request.args.get("description"),
+            url_website=request.args.get("url_website").lower(),
+        )
+        db.session.add(new_project)
+        db.session.commit()
+        return jsonify(response={"success": "Successfully added the new project."})
+    except Exception:
+        return jsonify(
+            error={"Internal Server Error": "Sorry, but this project already exist on the database."}), 500
 
 
 # HTTP PUT/PATCH - Update Record
 @app.route("/update-price", methods=["PATCH"])
+@token_required
 def update_new_project_price():
-    api_key = request.args.get("api_key")
     project_id = int(request.args.get("project_id"))
-    if api_key == "TopSecretAPIKey":
-        price_to_update = db.get_or_404(Project, project_id)
-        if price_to_update:
-            price_to_update.price = request.args.get("new_price")
-            db.session.commit()
-            return jsonify(response={"success": "Successfully update the price."}), 200
-        else:
-            return jsonify(error={"Not found": "Sorry a cafe with that id was not found in the database."}), 404
+    price_to_update = db.get_or_404(Project, project_id)
+    if price_to_update:
+        price_to_update.price = request.args.get("new_price")
+        db.session.commit()
+        return jsonify(response={"success": "Successfully update the price."}), 200
     else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+        return jsonify(error={"Not found": "Sorry a cafe with that id was not found in the database."}), 404
 
 
 # HTTP DELETE - Delete Record
 @app.route("/project-closed", methods=["DELETE"])
+@token_required
 def delete_project():
-    api_key = request.args.get("api_key")
     project_id = int(request.args.get("project_id"))
-    if api_key == "TopSecretAPIKey":
-        try:
-            project_to_delete = db.get_or_404(Project, project_id)
-            db.session.delete(project_to_delete)
-            db.session.commit()
-            return jsonify(response={"success": "Successfully deleted the project from the database."}), 200
-        except Exception:
-            return jsonify(error={"Not Found": "Sorry a project with that id was not found in the database."}), 404
-    else:
-        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+    try:
+        project_to_delete = db.get_or_404(Project, project_id)
+        db.session.delete(project_to_delete)
+        db.session.commit()
+        return jsonify(response={"success": "Successfully deleted the project from the database."}), 200
+    except Exception:
+        return jsonify(error={"Not Found": "Sorry a project with that id was not found in the database."}), 404
 
 
 if __name__ == "__main__":

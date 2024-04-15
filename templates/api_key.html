@@ -1,0 +1,45 @@
+{% from "bootstrap5/form.html" import render_form %} {% block content %} {%
+include "header.html" %}
+
+
+<div id="box" class="mt-5">
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+         <header id="header">
+          <h1>Get API_KEY</h1>
+        </header>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <p class="flash">{{ message }}</p>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+
+      <!--Rendering the registration form here-->
+
+          <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Usuario</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@{{current_user.username}}">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="inputPassword" class="col-sm-2 col-form-label">Your api_key</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputPassword" value="{{current_user.api_key}}">
+            </div>
+          </div>
+           <div class="col-auto">
+            <a href="{{url_for('generate_token')}}"><button type="submit"  class="btn btn-secondary">Generate api_key</button></a>
+          </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+{% include "footer.html" %} {% endblock %}
