@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, abort, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
@@ -11,24 +11,25 @@ import jwt
 from secrets import token_urlsafe
 from flask_ckeditor import CKEditor
 from functools import wraps
-from forms import LoginForm, RegisterForm, CommentForm, ChangePasswordForm # export the form's class
+# export the form's class
+from forms import LoginForm, RegisterForm, CommentForm, ChangePasswordForm
 import datetime
 import pytz
 import os
+from dotenv import load_dotenv
 
+load_dotenv(".env")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 # Create bootstrap from flask
 bootstrap = Bootstrap5(app)
 
+# Configure Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Set login view for unauthorized access
-
-# Create ckeditor from flask
-ckeditor = CKEditor(app)
 
 
 # User loader callback for Flask-Login (fetches user from database)
@@ -38,36 +39,38 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
+# Create ckeditor from flask
+ckeditor = CKEditor(app)
+
+
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///projects.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URI")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
 # CONFIGURE TABLES
-# Create a Project table for all features of house project
+# Create a Project table for all features of housing project
 class Project(db.Model):
     __tablename__ = "projects"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    logo: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    logo: Mapped[str] = mapped_column(String(250), nullable=False)
     location: Mapped[str] = mapped_column(String(250), nullable=False)
     city: Mapped[str] = mapped_column(String(250), nullable=False)
     company: Mapped[str] = mapped_column(String(250), nullable=False)
     address: Mapped[str] = mapped_column(String(250), nullable=False)
-    url_map: Mapped[str] = mapped_column(String(250), nullable=False)
-    address_sale: Mapped[str] = mapped_column(String(250), nullable=False)
+    url_map: Mapped[str] = mapped_column(String(500), nullable=False)
     contact: Mapped[str] = mapped_column(String(250), nullable=False)
-    stratum_city: Mapped[str] = mapped_column(String(250), nullable=False)
     area: Mapped[str] = mapped_column(String(250), nullable=False)
     price: Mapped[str] = mapped_column(String(250), nullable=False)
     type: Mapped[str] = mapped_column(String(250), nullable=False)
-    img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    description: Mapped[str] = mapped_column(String(250), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
     url_website: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     # Parent relationship to the comments
     comments = relationship("Comment", back_populates="parent_project")
@@ -108,12 +111,10 @@ class User(db.Model, UserMixin):
 # Create a table for the relationship many to many  between User and Project class
 class ProjectUser(db.Model):
     __tablename__ = 'project_users'
-
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), primary_key=True)
 
-    # Additional columns to store project-specific data for the user (optional)
-
+    # Additional columns to store project-specific data for the user
     def __repr__(self):
         return f'<ProjectUser user_id={self.user_id}, project_id={self.project_id}>'
 
@@ -141,16 +142,16 @@ with app.app_context():
 def home():
     if request.method == "POST":
         # Input in homepage
-        projects_by_item = request.form["search"].title()
+        projects_by_item = request.form["search"]
         # Projects filtered by location
         projects_by_location = db.session.execute(
-            db.select(Project).where(Project.location == projects_by_item)).scalars().all()
+            db.select(Project).where(Project.location == projects_by_item.title())).scalars().all()
         # Projects filtered by city
         projects_by_city = db.session.execute(
-            db.select(Project).where(Project.city == projects_by_item)).scalars().all()
+            db.select(Project).where(Project.city == projects_by_item.title())).scalars().all()
         # Projects filtered by company
         project_by_company = db.session.execute(
-            db.select(Project).where(Project.company == projects_by_item)).scalars().all()
+            db.select(Project).where(Project.company == projects_by_item.upper())).scalars().all()
         if projects_by_item == "Todos":
             all_projects = db.session.execute(db.select(Project)).scalars().all()
             return render_template("all_projects.html", all_projects=all_projects)
@@ -268,16 +269,22 @@ def edit_profile():
     user_db = db.get_or_404(User, user_id)
     # edit profile section
     if request.method == 'POST':
+        # update the profile photo by user
         uploaded_file = request.files["image_file"]
+        # Verify if update any file
         if not uploaded_file:
             flash("No se ha cargado el archivo.")
             return redirect(url_for('edit_profile', current_user=current_user))
+        # Verify if extension of file is valid
         elif not allowed_file(uploaded_file.filename):
             flash("Archivo no valido.")
             return redirect(url_for('edit_profile', current_user=current_user))
+        # Update the photo on user profile
         elif uploaded_file and allowed_file(uploaded_file.filename):
             filename = secure_filename(uploaded_file.filename)
+            # store the file inside the static files
             uploaded_file.save(f"static/images/img_profile/{filename}")
+            # save and add the next path in database column 'photo'
             user_db.photo = f"static/images/img_profile/{filename}"
             db.session.commit()
             return redirect(url_for('edit_profile', current_user=current_user))
@@ -294,12 +301,15 @@ def change_password():
     change_passwd_section = ChangePasswordForm()
     if change_passwd_section.validate_on_submit():
         written_password = change_passwd_section.current_password.data
+        # Verify if the current password is right
         if not check_password_hash(user_db.password, written_password):
             flash('Contraseña incorrecta, por favor trate de nuevo.')
             return redirect(url_for('change_password', current_user=current_user))
+        # Verify if the next password are equal
         if change_passwd_section.new_password.data != change_passwd_section.verificate_password.data:
             flash('Las contraseñas no son iguales.')
             return redirect(url_for('change_password', current_user=current_user))
+        # update the next password, logout section and user must login with the new password
         else:
             new_password = generate_password_hash(
                 password=change_passwd_section.new_password.data,
@@ -322,7 +332,6 @@ def forgot_password():
         if not user:
             flash("El correo no se registra en nuestra base de datos, por favor trate de nuevo.")
             return redirect(url_for('forgot_password'))
-
         # generate a new and temporal password
         temporal_password = f"Tu nueva contraseña es: {token_urlsafe(8)}"
         # store this password on database
@@ -330,7 +339,7 @@ def forgot_password():
             password=temporal_password,
             method="pbkdf2:sha256",
             salt_length=8
-            )
+        )
         user.password = new_password
         db.session.commit()
         # send the password for email
@@ -344,9 +353,9 @@ def forgot_password():
         # put the right location host of email
         connection = smtplib.SMTP(host_emails[stmp])
         connection.starttls()
-        connection.login(user="casaacuna47@gmail.com", password="cwieaggngjpanpet")
+        connection.login(user=os.getenv("ADMINISTER_EMAIL"), password=os.getenv("APP_PASSWORD_EMAIL"))
         connection.sendmail(
-            from_addr="casaacuna47@gmail.com",
+            from_addr=os.getenv("ADMINISTER_EMAIL"),
             to_addrs=request.form["email"].lower(),
             msg=temporal_password
         )
@@ -396,17 +405,37 @@ def documentation_api():
     return render_template("documentation_api.html")
 
 
+# DECORATORS FUNCTION
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.args.get("api_key")
+        # Verify if current user has generated a apikey
         if not token:
             return jsonify({'message': 'Token is missing!'}), 403
+        # Authenticate if apikey's user is valid
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
         except Exception:
             return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key or refresh it."}), 403
         return f(*args, **kwargs)
+    return decorated
+
+
+def only_admi(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.args.get("api_key")
+        # On database, the first user_id correspond to administer
+        admi = db.session.execute(db.select(User).where(User.id == 1)).scalar()
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 403
+        # Authenticate if the apikey correspond to administer apikey
+        if not token == admi.api_key:
+            return jsonify({'message': 'You are not the administrator, you are not authorized!'}), 403
+        else:
+            jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            return f(*args, **kwargs)
     return decorated
 
 
@@ -416,22 +445,25 @@ def get_api_key():
 
 
 @app.route('/api/token/generate')
+@login_required
 def generate_token():
+    # set the zone
     tz = pytz.timezone("America/Bogota")
     user_id = current_user.id
     user = db.get_or_404(User, user_id)
+    # Verify if user is registered in database
     if not user:
         return jsonify({'message': 'User not found'}), 404
-
+    # Generate the apikey
     token = jwt.encode({
         'user': user.username,
         'exp': datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
     }, app.config['SECRET_KEY'], algorithm="HS256")
-
+    # store the apikey in database with current user
     user.api_key = token
     user.api_key_expires = datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
     db.session.commit()
-
+    # Show to the user the apikey
     return jsonify({'api_key': token})
 
 
@@ -473,9 +505,7 @@ def post_new_project():
             company=request.args.get("company").upper(),
             address=request.args.get("address").title(),
             url_map=request.args.get("url_map").lower(),
-            address_sale=request.args.get("address_sale").title(),
             contact=request.args.get("contact").lower(),
-            stratum_city=request.args.get("stratum").title(),
             area=request.args.get("area").lower(),
             price=request.args.get("price").lower(),
             type=request.args.get("type").upper(),
@@ -485,16 +515,18 @@ def post_new_project():
         )
         db.session.add(new_project)
         db.session.commit()
-        return jsonify(response={"success": "Successfully added the new project."})
+        return jsonify(response={"success": "Successfully added the new project."}), 200
     except Exception:
         return jsonify(
-            error={"Internal Server Error": "Sorry, but this project already exist on the database."}), 500
+            error={"Internal Server Error": "Sorry, but this project already exist on the database"
+                                            " or there is an empty  or wrong item."}), 500
 
 
 # HTTP PUT/PATCH - Update Record
 @app.route("/update-price", methods=["PATCH"])
 @token_required
 def update_new_project_price():
+    # Update a new price by project
     project_id = int(request.args.get("project_id"))
     price_to_update = db.get_or_404(Project, project_id)
     if price_to_update:
@@ -502,13 +534,14 @@ def update_new_project_price():
         db.session.commit()
         return jsonify(response={"success": "Successfully update the price."}), 200
     else:
-        return jsonify(error={"Not found": "Sorry a cafe with that id was not found in the database."}), 404
+        return jsonify(error={"Not found": "Sorry a project with that id was not found in the database."}), 404
 
 
 # HTTP DELETE - Delete Record
 @app.route("/project-closed", methods=["DELETE"])
-@token_required
+@only_admi
 def delete_project():
+    # Delete a record (only allowed by administer)
     project_id = int(request.args.get("project_id"))
     try:
         project_to_delete = db.get_or_404(Project, project_id)

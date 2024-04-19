@@ -1,15 +1,14 @@
 {% from "bootstrap5/form.html" import render_form %} {% block content %} {%
 include "header.html" %}
 
-
 <div id="box">
-<main class="mb-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-         <header id="header">
-          <h1>Registrar usuario</h1>
-        </header>
+  <main class="mb-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <header id="header">
+            <h1>Registrar usuario</h1>
+          </header>
           {% with messages = get_flashed_messages() %}
           {% if messages %}
           {% for message in messages %}
@@ -17,13 +16,12 @@ include "header.html" %}
           {% endfor %}
           {% endif %}
           {% endwith %}
-
-      <!--Rendering the registration form here-->
-      {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+          <!--Rendering the registration form here-->
+          {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        </div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
 </div>
 
 {% include "footer.html" %} {% endblock %}

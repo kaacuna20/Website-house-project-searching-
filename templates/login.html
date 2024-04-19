@@ -4,28 +4,28 @@
 
 <!-- Page Header -->
 <div id="box">
-<main class="mb-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-         <header id="header">
-          <h1>Iniciar sección</h1>
-        </header>
-              <!-- Adding Flash message here for users trying to register twice -->
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for message in messages %}
-      <p class="flash">{{ message }}</p>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-      <!--Rendering the registration form here-->
-      {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-        <a href="{{ url_for('forgot_password') }}"><button type="button" class="btn btn-link">Olvidaste la contraseña</button></a>
+  <main class="mb-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <header id="header">
+            <h1>Iniciar sección</h1>
+          </header>
+          <!-- Adding Flash message here for users trying to register twice -->
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <p class="flash">{{ message }}</p>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <!--Rendering the registration form here-->
+          {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+          <a href="{{ url_for('forgot_password') }}"><button type="button" class="btn btn-link">Olvidaste la contraseña</button></a>
+        </div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
 </div>
 
 

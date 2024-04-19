@@ -39,7 +39,6 @@
 							'static/images/portada1.jpg': 'center',
 							'static/images/portada2.jpg': 'center',
 							'static/images/portada3.jpg': 'center',
-							'https://cdn.constructoracolpatria.com/landings/lanai/galeria/img-2.jpg': 'center'
 						},
 
 					// Delay.

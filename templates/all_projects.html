@@ -1,13 +1,13 @@
 {% include "header.html" %}
 
 
-<!-- Main Content-->
 <div id="box" class="mt-5">
-   <h1 style="text-align: center">Resultados a tu búsqueda</h1>
-    <div class="album py-5 bg-body-tertiary" style="opacity:0.8;">
+  <h1 style="text-align: center">Resultados a tu búsqueda</h1>
+  <div class="album py-5 bg-body-tertiary" style="opacity:0.8;">
     <div class="container" >
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" >
-      {% for project in all_projects: %}
+        {% for project in all_projects: %}
+        <!-- Main features projects-->
         <div class="col" >
           <div class="card shadow-sm" >
             <img src="{{ project.img_url }}" class="card-img-top" alt="{{project.name }}" width="250" height="250">
@@ -31,10 +31,10 @@
             </div>
           </div>
         </div>
-      {% endfor %}
-        </div>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
+
 {% include "footer.html" %}
