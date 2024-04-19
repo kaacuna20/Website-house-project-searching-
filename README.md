@@ -1,6 +1,11 @@
-# HOUSE FINDER
-
-![](https://github.com/kaacuna20/Website-house-project-searching-/blob/master/static/images/logo.gif)
+<div class="row ">
+							<div class="col ">
+								<h1  style="color:#C6AB7C; font-size: 80px; font-weight:bold;">HOUSE <br />FINDER</h1>
+							</div>
+							<div class="col">
+								<img src="https://github.com/kaacuna20/Website-house-project-searching-/blob/master/static/images/logo.gif" style="border-radius: 8px;" class="d-block mx-lg-auto img-fluid" width="200" height="200">
+							</div>
+						</div>
 
 
 In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS, Python and Flask. 
