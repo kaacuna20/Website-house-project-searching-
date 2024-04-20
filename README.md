@@ -15,6 +15,14 @@
 - There is a section for developer where can read the documentation about the API, whatching the routes to make the requests, the differents responses and restrictions;
 - Developers can generate their apikey to be allowed making requests;
 
+### Virtual Enviroment
+
+`$ python -m virtualenv venv`
+
+#### Execute virtualenv:
+
+`$ .\venv\Scripts\activate`
+
 ### Instalation
 #### On Windows type:
 
