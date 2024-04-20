@@ -4,7 +4,7 @@
 	</div>
 </div>
 
-<h4 style="text-align: justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS,Bootstrap, Python and Flask.</h4> 
+<h4 align="justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS,Bootstrap, Python and Flask.</h4> 
 
 ### Features of website
 
@@ -23,15 +23,43 @@
 
 `$ pip3 install -r requirements.txt`
 
-<p style="text-align: justify">I always wanted to create a website where both, users and developers can access the information, so, I decided created a section for users where can create their acount and save their favorites projects and section for developers through a RESTful API.</p>
+<p align="justify">I always wanted to create a website where both, users and developers can access the information, so, I decided created a section for users where can create their acount and save their favorites projects and section for developers through a RESTful API.</p>
 
 ### Steps
-<p style="text-align: justify">Having clear my goals, I started creating the main templates, I relied on '@ajlkn's' template from https://html5up.net/ and Flask-Bootstrap, later I created the database and their relationships using Flask-SQLAlchemy, the scheme is file 'Model database.pdf', the images like user photo profile, logos and background images were store in database like string of routes, either using the link directly from the web page where it was scraped or writing the path to the static folder, and go creating the routes using Flask. The funcionality of these relationships should allow users to filter at the moment to search by any item, like city, location or company, and also to save any project on their profiles.</p>
-
-<p style="text-align: justify">In parallel, I was editing the templates with Jinja2, using the file 'form' and generate the forms to register and login users, comments form and forgot password using WTForms and this let me managed the information since the frontend with database, CKEditor for the comment section and storage in database.</p>
-
-<p style="text-align: justify">After that, I focus on authorization and authentication with Flask-login and Werkzeug, the passwords were encrypted with SHA-256 with salting.</p>
-
-<p style="text-align: justify">Next step was creating the routes for API requests and to authenticate them with a token or apikey by user, two routes GET to get json response with information about projects, one POST response to post a record about a new project that's not stored in database, PATCH to update a price of any project, because the prices are dynamics and they are changing over time and DELETE to delete a record project but just allowed by administer token, all of these using jsonify to make the response and JWT to generate and validate the token by using decorator functions (wraps), to test the API I used Postman.</p>
-
-<p style="text-align: justify">Finally, I start to clean the code and tmeplates, fill the project class table using the project "web_scrapping_database", save the sensible information in enviroment variables.</p>
+<ol>
+	<li>
+		<p align="justify">
+		     Having clear my goals, I started creating the main templates, I relied on <strong>'@ajlkn's'</strong> template from https://html5up.net/ and Flask-Bootstrap, later I 
+                     created the database and their relationships using <strong>Flask-SQLAlchemy</strong>, the scheme is file <strong>"Model database.pdf"</strong>, the images like user 
+                     photo profile, logos and background images were store in database like string of routes, either using the link directly from the web page where it was scraped or 
+                     writing the path to the static folder, and go creating the routes using <strong>Flask</strong>. The funcionality of these relationships should allow users to filter 
+                     at the moment to search by any item, like city, location or company, and also to save any project on their profiles.
+		</p>
+ 	</li>
+	<li>
+	<p align="justify">
+		In parallel, I was editing the templates with <strong>Jinja2</strong>, using the file 'form' and generate the forms to register and login users, comments form and forgot 
+                password using <strong>WTForm</strong>s and this let me managed the information since the frontend with database, <strong>CKEditor</strong> for the comment section and 
+                storage in database.
+	</p>
+ 	</li>
+	<li>
+		<p align="justify">After that, I focus on authorization and authentication with <strong>Flask-login</strong> and <strong>Werkzeug</strong>, the passwords were encrypted 
+                with algorithm SHA-256 and adding a salting.
+		</p>
+ 	</li>
+	<li>
+		<p align="justify">
+		Next step was creating the routes for API requests and to authenticate them with a token or apikey by user, two routes GET to get json response with information about 
+                projects, one POST response to post a record about a new project that's not stored in database, PATCH to update a price of any project, because the prices are dynamics 
+                and they are changing over time and DELETE to delete a record project but just allowed by administer token, all of these using jsonify to make the response and 
+                <strong>JWT</strong> to generate and validate the token by using decorator functions (wraps), to test the API I used <strong>Postman.</strong>
+		</p>
+	 </li>
+	<li>
+		<p align="justify">
+			Finally, I start to clean the code and templates, fill the project class table using the project <a href="https://github.com/kaacuna20/webscraping-construction- 
+                        companies">"web_scrapping_database</a>", save the sensible information in enviroment variables.
+		</p>
+	</li>
+</ol>
