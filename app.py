@@ -231,6 +231,7 @@ def save_project_user(user_id, project_id):
     return redirect(url_for("user_projects", user_id=user_id))
 
 
+# DELETE PROJECT SAVED BY USER
 @app.route("/delete/<int:user_id>/<int:project_id>")
 def delete_project_user(user_id, project_id):
     db.session.query(ProjectUser).filter_by(user_id=user_id, project_id=project_id).delete()
@@ -238,6 +239,7 @@ def delete_project_user(user_id, project_id):
     return redirect(url_for("user_projects", user_id=user_id))
 
 
+# SHOW SAVED PROJECTS BY USER
 @app.route("/user")
 @login_required
 def user_projects():
@@ -323,7 +325,7 @@ def change_password():
     return render_template("password_section.html", current_user=current_user, form=change_passwd_section)
 
 
-# FORGOT PASSWORD
+# FORGOT PASSWORD SECTION
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == "POST":
