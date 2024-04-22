@@ -25,7 +25,7 @@
 `$ venv\Scripts\activate`
 
 #### On MacOS type:
-`$ source venv/bin/activate`
+`$ source venv/Scripts/activate`
 
 ### Instalation
 #### On Windows type:
