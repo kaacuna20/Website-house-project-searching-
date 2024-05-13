@@ -1,0 +1,41 @@
+{% include "header.html" %}
+
+<div id="box" class="mt-5">
+	<main class="mb-4">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-10 mx-auto">
+					<header id="header">
+						<div class="row ">
+							<div class="col ">
+								<h1  style="color:#C6AB7C; font-size: 80px; font-weight:bold;">HOUSE <br />FINDER</h1>
+							</div>
+							<div class="col">
+								<img src="static/images/logo.gif" style="border-radius: 8px;" class="d-block mx-lg-auto img-fluid" width="200" height="200">
+							</div>
+						</div>
+
+						<h3>Una simple manera de encontrar la casa/apto de tu <br />
+							sueño con tan solo un click.<br />
+						</h3>
+					</header>
+					<!-- Adding Flash message here for users trying to register twice -->
+					{% with messages = get_flashed_messages() %}
+					{% if messages %}
+					{% for message in messages %}
+					<p class="flash" >{{ message }}</p>
+					{% endfor %}
+					{% endif %}
+					{% endwith %}
+					<!--Rendering the registration form here id="signup-form"-->
+					<form id="signup-form_n" method="post" action="{{ url_for('index.home') }}">
+						<input type="text" name="search" id="email" placeholder="Ciudad/localidad/constructora" size="30"/>
+						<input type="submit" value="Buscar" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+</div>
+<!-- Footer -->
+{% include "footer.html" %}
