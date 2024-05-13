@@ -30,6 +30,7 @@
         <list>
           <option value="str.delete" />
           <option value="int.lower" />
+          <option value="str.__or__" />
         </list>
       </option>
     </inspection_tool>
