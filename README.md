@@ -21,7 +21,11 @@
 
 #### Execute virtualenv:
 
-`$ .\venv\Scripts\activate`
+#### On Windows type:
+`$ venv\Scripts\activate`
+
+#### On MacOS type:
+`$ source venv/Scripts/activate`
 
 ### Instalation
 #### On Windows type:
