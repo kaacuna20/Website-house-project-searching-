@@ -40,7 +40,7 @@
 				<svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#cpu-fill"></use></svg>
 				<div>
 					<h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Precio actual</h3>
-					<p>Los apartamentos para el presente año están valorizados desde {{project.price| format_currency}}.</p>
+					<p>Los apartamentos para el presente año están valorizados desde {{ format_currency(project.price) }}.</p>
 				</div>
 			</div>
 			<div class="col d-flex align-items-start">

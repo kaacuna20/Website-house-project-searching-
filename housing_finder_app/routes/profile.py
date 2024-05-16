@@ -11,6 +11,7 @@ profile_bp = Blueprint('profile', __name__)
 
 # SAVE PROJECT BY USER
 @profile_bp.route("/<int:user_id>/<int:project_id>")
+@login_required
 def save_project_user(user_id, project_id):
     user = db.get_or_404(User, user_id)
     project = db.get_or_404(Project, project_id)
@@ -21,6 +22,7 @@ def save_project_user(user_id, project_id):
 
 # DELETE PROJECT SAVED BY USER
 @profile_bp.route("/delete/<int:user_id>/<int:project_id>")
+@login_required
 def delete_project_user(user_id, project_id):
     db.session.query(ProjectUser).filter_by(user_id=user_id, project_id=project_id).delete()
     db.session.commit()
@@ -47,6 +49,7 @@ def allowed_file(filename):
 
 
 @profile_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
     user_id = current_user.id
     user_db = db.get_or_404(User, user_id)
@@ -81,21 +84,21 @@ def change_password():
     user_id = current_user.id
     user_db = db.get_or_404(User, user_id)
     # change password section
-    change_passwd_section = ChangePasswordForm()
-    if change_passwd_section.validate_on_submit():
-        written_password = change_passwd_section.current_password.data
+    change_password_section = ChangePasswordForm()
+    if change_password_section.validate_on_submit():
+        written_password = change_password_section.current_password.data
         # Verify if the current password is right
         if not check_password_hash(user_db.password, written_password):
             flash('Contraseña incorrecta, por favor trate de nuevo.')
             return redirect(url_for('profile.change_password', current_user=current_user))
         # Verify if the next password are equal
-        if change_passwd_section.new_password.data != change_passwd_section.verificate_password.data:
+        if change_password_section.new_password.data != change_password_section.verificate_password.data:
             flash('Las contraseñas no son iguales.')
             return redirect(url_for('profile.change_password', current_user=current_user))
         # update the next password, logout section and user must login with the new password
         else:
             new_password = generate_password_hash(
-                password=change_passwd_section.new_password.data,
+                password=change_password_section.new_password.data,
                 method="pbkdf2:sha256",
                 salt_length=8
             )
@@ -103,4 +106,4 @@ def change_password():
             db.session.commit()
             logout_user()
             return redirect(url_for('user.login'))
-    return render_template("password_section.html", current_user=current_user, form=change_passwd_section)
+    return render_template("password_section.html", current_user=current_user, form=change_password_section)

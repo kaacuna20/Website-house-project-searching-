@@ -2,11 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from secrets import token_urlsafe
-import smtplib
 from housing_finder_app.models import User
 from housing_finder_app.models import db
 from housing_finder_app.auth.forms import LoginForm, RegisterForm
-import os
 from dotenv import load_dotenv
 import asyncio
 from housing_finder_app.common.mail import send_email
@@ -60,7 +58,7 @@ def login():
         user = User.query.filter((User.email == form.email_user.data) | (User.username == form.email_user.data)).first()
         # Email doesn't exist
         if not user:
-            flash("El correo no existe, por favor trate de nuevo.")
+            flash('El correo no existe, por favor trate de nuevo.')
             return redirect(url_for('user.register'))
         # Password incorrect
         elif not check_password_hash(user.password, password):
@@ -95,8 +93,8 @@ def forgot_password():
             send_email(subject=f'NO-REPLY: Tu nueva contraseña',
                        sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
                        recipients=[request.form["email"].lower(), ],
-                       text_body=f'Tu nueva contraseña es: {temporal_password}',
-                       html_body=f'<p>Tu nueva contraseña es  <strong>{temporal_password}</strong></p>')
+                       text_body=f'Tu nueva contraseña es: {temporal_password}'
+                       )
             # store this password on database
             new_password = generate_password_hash(
                 password=temporal_password,
@@ -108,7 +106,7 @@ def forgot_password():
             flash("Tu nueva contraseña fue enviada a tu correo")
 
         except SMTPException:
-             flash("El correo no se registra en nuestra base de datos, por favor trate de nuevo.")
+             flash("Algo salió mal y no se pudo enviar el correo")
         return redirect(url_for('user.login'))
     return render_template("forgot_password.html")
 

@@ -1,58 +1,19 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 import jwt
 import datetime
 import pytz
-from functools import wraps
+from housing_finder_app.utils.decorators import token_required, only_admi
 from housing_finder_app.models import User, Project
 from housing_finder_app.models import db
 import os
 
-SECRET_KEY=os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-api_bp = Blueprint('api', __name__, static_folder='static', static_url_path='/static')
-
-
+api_bp = Blueprint('api', __name__)
 
 
-# DECORATORS FUNCTION
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.args.get("api_key")
-        # Verify if current user has generated a apikey
-        if not token:
-            return jsonify({'message': 'Token is missing!'}), 403
-        # Authenticate if apikey's user is valid
-        try:
-            jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        except Exception:
-            return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key or refresh it."}), 403
-        return f(*args, **kwargs)
-    return decorated
-
-
-def only_admi(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.args.get("api_key")
-        # On database, the first user_id correspond to administer
-        admi = db.session.execute(db.select(User).where(User.is_admin == True)).scalar()
-        if not token:
-            return jsonify({'message': 'Token is missing!'}), 403
-        # Authenticate if the apikey correspond to administer apikey
-        if not token == admi.api_key:
-            return jsonify({'message': 'You are not the administrator, you are not authorized!'}), 403
-        else:
-            jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            return f(*args, **kwargs)
-    return decorated
-
-
-
-
-
-@api_bp.route('/token/generate')
+@api_bp.route('/token-generate')
 @login_required
 def generate_token():
     # set the zone
@@ -83,7 +44,7 @@ def project_by_location():
     query_loc = request.args.get("loc").title()
     locate_project = db.session.execute(db.select(Project).where(Project.location == query_loc)).scalars().all()
     if locate_project:
-        return jsonify(projects=[project.to_dict() for project in locate_project])
+        return jsonify(projects=[project.to_dict() for project in locate_project]), 200
     else:
         return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
 
@@ -97,7 +58,32 @@ def project_by_city():
     if locate_project:
         return jsonify(projects=[project.to_dict() for project in locate_project])
     else:
-        return jsonify(error={"Not found": "Sorry, we don't have a project at that location."}), 404
+        return jsonify(error={"Not found": "Sorry, we don't have a project at that city."}), 404
+
+
+@api_bp.route("/company")
+@token_required
+def project_by_company():
+    # search by location
+    query_company = request.args.get("company").upper()
+    locate_project = db.session.execute(db.select(Project).where(Project.company == query_company)).scalars().all()
+
+    if locate_project:
+        return jsonify(projects=[project.to_dict() for project in locate_project]), 200
+    else:
+        return jsonify(error={"Not found": "Sorry, we don't have a projects at that company."}), 404
+
+
+@api_bp.route("/project-details")
+@token_required
+def project():
+    # search by location
+    project_id = int(request.args.get("project_id"))
+    try:
+        locate_project = db.get_or_404(Project, project_id)
+        return jsonify({f"{locate_project.name}": locate_project.to_dict()}), 200
+    except Exception:
+        return jsonify(error={"Not found": "Sorry, we don't have that project."}), 404
 
 
 # HTTP POST - Create Record
@@ -114,8 +100,8 @@ def post_new_project():
             address=request.args.get("address").title(),
             url_map=request.args.get("url_map").lower(),
             contact=request.args.get("contact").lower(),
-            area=request.args.get("area").lower(),
-            price=request.args.get("price").lower(),
+            area=request.args.get("area"),
+            price=request.args.get("price"),
             type=request.args.get("type").upper(),
             img_url=request.args.get("img_url").lower(),
             description=request.args.get("description"),
@@ -137,12 +123,13 @@ def post_new_project():
 def update_new_project_price():
     # Update a new price by project
     project_id = int(request.args.get("project_id"))
-    price_to_update = db.get_or_404(Project, project_id)
-    if price_to_update:
+
+    try:
+        price_to_update = db.get_or_404(Project, project_id)
         price_to_update.price = request.args.get("new_price")
         db.session.commit()
         return jsonify(response={"success": "Successfully update the price."}), 200
-    else:
+    except Exception:
         return jsonify(error={"Not found": "Sorry a project with that id was not found in the database."}), 404
 
 

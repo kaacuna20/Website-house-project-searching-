@@ -1,0 +1,37 @@
+my_flask_app/
+├── app/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── api.py
+│   │   ├── user.py
+│   │   ├── index.py
+│   │   ├── profile.py
+│   │   ├── projects.py
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   ├── forms.py
+│   │   └── utils.py
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   ├── profile.html
+│   │   ├── index.html
+│   │   └── project.html
+├── instance/
+│   ├── config.py
+│   ├── app.db
+├── tests/
+│   ├── __init__.py
+│   ├── test_api.py
+│   ├── test_user.py
+│   ├── test_projects.py
+│   └── conftest.py
+├── config.py
+├── requirements.txt
+└── run.py

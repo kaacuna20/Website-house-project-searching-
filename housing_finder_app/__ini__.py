@@ -1,28 +1,22 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
-import os
 from flask_bootstrap import Bootstrap5
-from flask_sqlalchemy import SQLAlchemy
 from housing_finder_app import models
 from flask_migrate import Migrate
 from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
-import locale
+from housing_finder_app.utils.helpers import format_currency
 
 
-load_dotenv(".env")
 db = models.db
 migrate = Migrate()
 login_manager = LoginManager()
 mail = Mail()
 
-def create_app(settings_module=os.getenv("CONFIGURATION_SETUP")):
+
+def create_app(settings_module):
     app = Flask(__name__, instance_relative_config=True)  # Allows instance configuration
-    #app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config.from_object(settings_module)
-    app.config.from_pyfile('config.py', silent=True)
 
     login_manager.init_app(app)  # Initialize Flask-Login
     login_manager.login_view = 'login'
@@ -33,12 +27,11 @@ def create_app(settings_module=os.getenv("CONFIGURATION_SETUP")):
         # Fetch user data from database or other source
         return models.User.query.get(user_id)
 
-
     # Create bootstrap from flask
-    bootstrap = Bootstrap5(app)
+    Bootstrap5(app)
 
     # Create ckeditor from flask
-    ckeditor = CKEditor(app)
+    CKEditor(app)
 
     # init database from models
     db.init_app(app)
@@ -48,7 +41,7 @@ def create_app(settings_module=os.getenv("CONFIGURATION_SETUP")):
         db.create_all()
 
     migrate.init_app(app, db)
-    # initialite mail in app
+    # initialize mail in app
     mail.init_app(app)
 
     # Import routes and register Blueprints
@@ -66,9 +59,7 @@ def create_app(settings_module=os.getenv("CONFIGURATION_SETUP")):
     app.register_blueprint(index_bp)
     app.register_blueprint(api_doc_bp)
 
-    @app.template_filter()
-    def format_currency(value):
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Set locale to use proper currency formatting
-        return locale.currency(value, grouping=True)
+    # Add the format_currency function to the Jinja2 template context
+    app.jinja_env.globals.update(format_currency=format_currency)
 
     return app

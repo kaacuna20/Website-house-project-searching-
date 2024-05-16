@@ -4,6 +4,7 @@ from sqlalchemy import Integer, String, Text, DateTime, Float, CheckConstraint
 from flask_login import UserMixin
 from slugify import slugify
 
+
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
@@ -27,9 +28,9 @@ class Project(db.Model):
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     type: Mapped[str] = mapped_column(String(250), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=False)
-    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
     url_website: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    slug: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    slug: Mapped[str] = mapped_column(String(250), unique=True, nullable=False, index=True)
     # Parent relationship to the comments
     comments = relationship("Comment", back_populates="parent_project")
     # Relationship with User table (many-to-many)
@@ -103,5 +104,5 @@ class Comment(db.Model):
     userc_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comment_user = relationship("User", back_populates="comments")
     # Child Relationship to the BlogPosts
-    projectc_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("projects.id"))
+    projectc_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("projects.id" ,ondelete='CASCADE'), nullable=True)
     parent_project = relationship("Project", back_populates="comments")

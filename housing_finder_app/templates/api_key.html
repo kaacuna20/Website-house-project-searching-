@@ -42,8 +42,9 @@ include "header.html" %}
                             {% endif %}
                         </div>
                     </div>
+
                     <div class="col-auto">
-                        <a href="{{url_for('api.generate_token')}}"><button type="submit"  class="btn btn-secondary">Generate api_key</button></a>
+                        <a href="{{url_for('api.generate_token')}}"><button name="generate_api" type="submit"  class="btn btn-secondary">Generate api_key</button></a>
                     </div>
 
                 </div>
