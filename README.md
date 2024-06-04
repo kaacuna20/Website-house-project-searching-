@@ -70,8 +70,8 @@
 	 </li>
 	<li>
 		<p align="justify">
-			Finally, I start to clean the code and templates, fill the project class table using the project <a href="https://github.com/kaacuna20/webscraping-construction- 
-                        companies">"web_scrapping_database</a>", save the sensible information in enviroment variables.
+			Finally, I start to clean the code and templates, fill the project class table using the project <a href=["https://github.com/kaacuna20/webscraping-construction- 
+                        companies](https://github.com/kaacuna20/webscraping-construction-companies)">"web_scrapping_database</a>", save the sensible information in enviroment variables.
 		</p>
 	</li>
 </ol>
