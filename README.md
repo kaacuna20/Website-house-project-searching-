@@ -4,9 +4,9 @@
 	</div>
 </div>
 
-<h4 align="justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS,Bootstrap, Python and Flask.</h4> 
+<h4 align="justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS, Bootstrap, Python and two of their frameworks, FastApi and Flask and last, conect all this using docker containers.</h4> 
 
-### Features of website
+### Features of aplication
 
 - Let view housing projects in Atlantico - Colombia, specifically in Puerto Colombia, Barranquilla and Soledad city, filter the search by construction company, location and city;
 - User can register and login section, personalize their profiles and save their favorites projects on their accounts;
@@ -15,62 +15,141 @@
 - There is a section for developer where can read the documentation about the API, whatching the routes to make the requests, the differents responses and restrictions;
 - Developers can generate their apikey to be allowed making requests;
 
-### Virtual Enviroment
+### Dockerized  House Finder
 
-`$ python -m virtualenv venv`
+This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
 
-#### Execute virtualenv:
+## Table of Contents
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Configuration](#configuration)
+- [Services](#services)
+  - [webapp_house_finder](#webapp_house_finder)
+  - [api_house_finder](#api_house_finder)
+  - [nginx](#nginx)
+  - [postgresql_db](#postgresql_db)
+- [Networks](#networks)
+- [Volumes](#volumes)
+- [Running the Application](#running-the-application)
 
-#### On Windows type:
-`$ venv\Scripts\activate`
+## Overview
 
-#### On MacOS type:
-`$ source venv/Scripts/activate`
+This setup uses Docker Compose to manage the following services:
 
-### Instalation
-#### On Windows type:
+1. **Flask Web Application** (`webapp_house_finder`)
+2. **FastAPI API** (`api_house_finder`)
+3. **NGINX Reverse Proxy** (`nginx`)
+4. **PostgreSQL Database** (`postgresql_db`)
 
-`$ python -m pip install -r requirements.txt`
-#### On MacOS type:
+All services are connected via a custom Docker network called `house_finder_web`.
 
-`$ pip3 install -r requirements.txt`
+## Prerequisites
 
-<p align="justify">I always wanted to create a website where both, users and developers can access the information, so, I decided created a section for users where can create their acount and save their favorites projects and section for developers through a RESTful API.</p>
+- Docker installed on your machine
+- Docker Compose installed on your machine
+- Environment variables set in a `.env` file
+- Graphviz installed and configured (for generating diagrams)
 
-### Steps
-<ol>
-	<li>
-		<p align="justify">
-		     Having clear my goals, I started creating the main templates, I relied on <strong>'@ajlkn's'</strong> template from https://html5up.net/ and Flask-Bootstrap, later I 
-                     created the database and their relationships using <strong>Flask-SQLAlchemy</strong>, the scheme is file <strong>"Model database.pdf"</strong>, the images like user 
-                     photo profile, logos and background images were store in database like string of routes, either using the link directly from the web page where it was scraped or 
-                     writing the path to the static folder, and go creating the routes using <strong>Flask</strong>. The funcionality of these relationships should allow users to filter 
-                     at the moment to search by any item, like city, location or company, and also to save any project on their profiles.
-		</p>
- 	</li>
-	<li>
-	<p align="justify">
-		In parallel, I was editing the templates with <strong>Jinja2</strong>, using the file 'form' and generate the forms to register and login users, comments form and forgot 
-                password using <strong>WTForm</strong>s and this let me managed the information since the frontend with database, <strong>CKEditor</strong> for the comment section and 
-                storage in database.
-	</p>
- 	</li>
-	<li>
-		<p align="justify">After that, I focus on authorization and authentication with <strong>Flask-login</strong> and <strong>Werkzeug</strong>, the passwords were encrypted 
-                with algorithm SHA-256 and adding a salting.
-		</p>
- 	</li>
-	<li>
-		<p align="justify">
-		Next step was creating the routes for API requests and to authenticate them with a token or apikey by user, two routes GET to get json response with information about 
-                projects, one POST response to post a record about a new project that's not stored in database, PATCH to update a price of any project, because the prices are dynamics 
-                and they are changing over time and DELETE to delete a record project but just allowed by administer token, all of these using jsonify to make the response and 
-                <strong>JWT</strong> to generate and validate the token by using decorator functions (wraps), to test the API I used <strong>Postman.</strong>
-		</p>
-	 </li>
-	<li>
-		<p align="justify">
-			Finally, I start to clean the code and templates, fill the project class table using the project <a href="https://github.com/kaacuna20/webscraping-construction-companies">"web_scrapping_database</a>", save the sensible information in enviroment variables.
-		</p>
-	</li>
-</ol>
+## Configuration
+
+Create a `.env` file in the root directory of your project with the following variables:
+
+```ini
+# .env file
+PRO_DB_URL=your_database_url
+SECRET_APP_KEY=your_secret_key
+FLASK_APP=your_flask_app
+PRO_CONFIGURATION_SETUP=your_configuration_setup
+APP_PASSWORD_EMAIL=your_app_password_email
+ADMINISTER_EMAIL=your_admin_email
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_USER=your_postgres_user
+POSTGRES_DB=your_postgres_db
+```
+## Services
+### webapp_house_finder
+
+- Description: This service runs the Flask web application.
+- Build Context: `./webapp-house-finder`
+- Dockerfile: `Dockerfile`
+- Container Name: `flask_house_finder`
+- Ports: `5003:5003`
+- Volumes:
+     - `./images/api:/app/app/static/images/img-projects`
+     - `./images/profile:/app/app/static/images/img-profile`
+- Environment Variables:
+     - `DB_URL`
+     - `SECRET_APP_KEY`
+     - `FLASK_APP`
+     - `CONFIGURATION_SETUP`
+     - `APP_PASSWORD_EMAIL`
+     - `ADMINISTER_EMAIL`
+     - `DEBUG=False`
+- Dependencies: `postgresql_db`
+- Network: `house_finder_web`
+  
+### api_house_finder
+- Description: This service runs the FastAPI application.
+- Build Context: `./api-house-finder`
+- Dockerfile: `Dockerfile`
+- Container Name: `fastapi_house_finder`
+- Ports: `8000:8000`
+- Volumes:
+     - `./images/api:/app/app/static/images/img-projects`
+- Environment Variables:
+     - `DB_URL`
+     - `SECRET_APP_KEY`
+- Dependencies: `postgresql_db`
+- Network: `house_finder_web`
+
+### nginx
+- Description: This service runs the NGINX reverse proxy.
+- Build Context: `./nginx`
+- Ports: `80:80`
+- Dependencies: `webapp_house_finder`, `api_house_finder`
+- Network: `house_finder_web`
+
+### postgresql_db
+- Description: This service runs the PostgreSQL database.
+- Image: `postgres:12`
+- Container Name: `postgresql_db`
+- Ports: `5432:5432`
+- Environment Variables:
+     - `POSTGRES_PASSWORD`
+     - `POSTGRES_USER`
+     - `POSTGRES_DB`
+- Volumes:
+     - `./postgresql_data:/var/lib/postgresql/data`
+- Network:
+     - `house_finder_web`
+
+## Networks
+- house_finder_web: A custom network for connecting all the services.
+
+## Volumes
+- postgresql-data: Stores PostgreSQL data.
+- images: Stores images used by the applications.
+
+## Running the Application
+
+1. Ensure Docker and Docker Compose are installed.
+
+2. Create a .env file in the root directory with the necessary environment variables.
+
+3. Run the following command to build and start all services:
+   
+   `docker-compose up --build`
+4. Access the services:
+
+- Flask Web Application: http://localhost:5003
+- FastAPI API: http://localhost:8000
+- NGINX Reverse Proxy: http://localhost:80
+
+5. To stop the services, run:
+
+   `docker-compose down`
+
+## Diagram
+- Below is a visual representation of the Docker Compose setup:
+
+![Docker Compose Diagram](docker-compose.png)
