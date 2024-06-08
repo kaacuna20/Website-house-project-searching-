@@ -151,7 +151,6 @@ POSTGRES_DB=your_postgres_db
 
    `docker-compose down`
 
-<<<<<<< HEAD
 ## Diagram
 - Below is a visual representation of the Docker Compose setup:
 
