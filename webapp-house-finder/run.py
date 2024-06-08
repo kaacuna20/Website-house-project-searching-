@@ -7,4 +7,4 @@ app = create_app(settings_module=environ.get('CONFIGURATION_SETUP'))
 
   
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5003)
+    app.run(debug=environ.get('DEBUG'), host="0.0.0.0", port=5003)

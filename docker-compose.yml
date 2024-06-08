@@ -1,6 +1,69 @@
 version: "3"
 
+networks:
+  house_finder_web:
+
 services:
+          
+  webapp_house_finder:
+    container_name: flask_house_finder
+    build:
+      context: ./webapp-house-finder
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./images/api:/app/app/static/images/img-projects
+      - ./images/profile:/app/app/static/images/img-profile
+    environment:
+      - DB_URL=${PRO_DB_URL}
+      - SECRET_APP_KEY=${SECRET_APP_KEY}
+      - FLASK_APP=${FLASK_APP}
+      - CONFIGURATION_SETUP=${PRO_CONFIGURATION_SETUP}
+      - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
+      - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
+      - DEBUG=False
+    depends_on:
+      - postgresql_db
+    env_file:
+      - .env
+    networks:
+      - house_finder_web
+  
+  api_house_finder:
+    container_name: fastapi_house_finder
+    build:
+      context: ./api-house-finder
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./images/api:/app/app/static/images/img-projects
+    environment:
+      - DB_URL=${PRO_DB_URL}
+      - SECRET_APP_KEY=${SECRET_APP_KEY}
+    depends_on:
+      - postgresql_db
+    env_file:
+      - .env
+    networks:
+      - house_finder_web
+
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - webapp_house_finder
+      - api_house_finder
+    networks:
+      - house_finder_web
+
+
   postgresql_db:
     container_name: postgresql_db
     image: postgres:12
@@ -15,69 +78,8 @@ services:
       - ./postgresql_data:/var/lib/postgresql/data 
     env_file:
       - .env
-        
-  webapp_house_finder:
-    container_name: flask_house_finder
-    build:
-      context: ./webapp-house-finder
-      dockerfile: Dockerfile
-    ports:
-      - "5003:5003"
-    volumes:
-      - ./images/api:/app/app/static/images/img-projects
-      - ./images/profile:/app/app/static/images/img-profile
-    environment:
-      - DB_URL=${DB_URL}
-      - SECRET_APP_KEY=${SECRET_APP_KEY}
-      - FLASK_APP=${FLASK_APP}
-      - CONFIGURATION_SETUP=${DEV_CONFIGURATION_SETUP}
-      - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
-      - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
-    depends_on:
-      - postgresql_db
-    env_file:
-      - .env
-  
-  api_house_finder:
-    container_name: fastapi_house_finder
-    build:
-      context: ./api-house-finder
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./images/api:/app/app/static/images/img-projects
-    environment:
-      - DB_URL=${DB_URL}
-      - SECRET_APP_KEY=${SECRET_APP_KEY}
-    depends_on:
-      - postgresql_db
-    env_file:
-      - .env
-  
-  test_fastapi:
-    build:
-      context: ./api-house-finder
-      dockerfile: Dockerfile
-    command: ["pytest"]
-    environment:
-      - DB_URL=${DB_URL}
-      - TEST_APIKEY=${TEST_APIKEY}
-      - TEST_TOKEN=${TEST_TOKEN}
-    depends_on:
-      - postgresql_db
-    env_file:
-      - .env
-
-  test_flask:
-    build:
-      context: ./webapp-house-finder
-      dockerfile: Dockerfile
-    command: ["pytest", "app/tests/"]
-    environment:
-      - TEST_CONFIGURATION_SETUP=${TEST_CONFIGURATION_SETUP}
-    env_file:
-      - .env
+    networks:
+      - house_finder_web
 
 volumes:
   postgresql-data:

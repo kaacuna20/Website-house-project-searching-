@@ -52,7 +52,7 @@ def create_app(settings_module):
 
     app.register_blueprint(profile_bp)
     app.register_blueprint(user_bp)
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(api_bp)
     app.register_blueprint(project_bp)
     app.register_blueprint(index_bp)
     app.register_blueprint(api_doc_bp)

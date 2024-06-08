@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 8000
 
 # Start the FastAPI application
-CMD ["python", "run.py"]
+CMD ["gunicorn", "app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]

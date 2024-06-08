@@ -47,3 +47,4 @@ python-slugify
 selenium
 webdriver_manager
 pytest
+gunicorn

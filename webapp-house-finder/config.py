@@ -16,6 +16,7 @@ class DevelopmentConfig(Config):
     DONT_REPLY_FROM_EMAIL =environ.get('ADMINISTER_EMAIL')
     ADMINS = (environ.get('ADMINISTER_EMAIL'),)
     MAIL_USE_TLS = True
+   
     
     
 class TestingConfig(Config):
@@ -35,6 +36,13 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    pass
+    SQLALCHEMY_DATABASE_URI = environ.get('DB_URL')
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USERNAME = environ.get('ADMINISTER_EMAIL')
+    MAIL_PASSWORD = environ.get('APP_PASSWORD_EMAIL')
+    DONT_REPLY_FROM_EMAIL =environ.get('ADMINISTER_EMAIL')
+    ADMINS = (environ.get('ADMINISTER_EMAIL'),)
+    MAIL_USE_TLS = True
 
 

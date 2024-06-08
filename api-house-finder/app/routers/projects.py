@@ -9,6 +9,8 @@ from app.helper.normalize_text import normalize_text
 
 router = APIRouter()
 
+
+
 @router.get("/api/v1/location")
 async def project_by_location(loc: str, db: Session = Depends(get_db), user: User = Depends(api_key_auth)):
     query_loc = normalize_text(loc.title())

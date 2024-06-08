@@ -21,6 +21,7 @@ COPY . .
 
 EXPOSE 5003
 
-CMD ["python", "run.py"]
+CMD ["gunicorn", "run:app", "-w", "4", "--bind", "0.0.0.0:5003"]
+
 
 
