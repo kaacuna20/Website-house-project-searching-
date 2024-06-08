@@ -1,0 +1,2 @@
+# Dummy Dockerfile
+FROM scratch
