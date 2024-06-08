@@ -31,6 +31,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
 - [Networks](#networks)
 - [Volumes](#volumes)
 - [Running the Application](#running-the-application)
+- [Diagram](#diagram)
 
 ## Overview
 
@@ -49,6 +50,7 @@ All services are connected via a custom Docker network called `house_finder_web`
 - Docker Compose installed on your machine
 - Environment variables set in a `.env` file
 - Graphviz installed and configured (for generating diagrams)
+
 
 ## Configuration
 
@@ -149,6 +151,7 @@ POSTGRES_DB=your_postgres_db
 
    `docker-compose down`
 
+<<<<<<< HEAD
 ## Diagram
 - Below is a visual representation of the Docker Compose setup:
 
