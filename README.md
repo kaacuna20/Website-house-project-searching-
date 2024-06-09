@@ -51,7 +51,58 @@ Website-house-project-searching/
 ├── api-house-finder/
 │   ├── Dockerfile
 │   ├── requirements.txt
-│   └── # other FastAPI app files
+│   ├── run.py
+│   ├── app/
+│      ├── __init__.py
+│      ├── database.py
+│      ├── main.py
+│      ├── models.py
+│      ├── helper/
+│      │     ├── download_img.py
+│      │     └── normalize_text.py
+│      ├── routers/	
+│      │  ├── __init__.py
+│      │   └── projects.py
+│      ├── utils/	
+│      │  ├── __init__.py
+│      │  └── auth.py
+│      └── test_project.py
+│
+├── webapp-house-finder/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── run.py
+|   ├── config.py
+│   ├── app/
+│      ├── __init__.py
+│      ├── models.py
+│      ├── auth/
+│      │     ├── __init__.py
+│      │     └── forms.py
+|      ├── common/
+│      │     ├── __init__.py
+│      │     └── mail.py
+│      ├── routers/	
+│      │   ├── __init__.py
+|      │   ├── api_documentation.py
+|      │   ├── api.py
+|      │   ├── index.py
+|      │   ├── profile.py
+|      │   ├── user.py
+│      │   └── project.py
+|      ├── templates/
+|      ├── static/
+│      ├── utils/	
+│      │  ├── __init__.py
+│      │  └── helpers.py
+│      └── test/
+|         ├── __init__.py
+|         ├── conftest.py
+|         ├── test_api_route.py
+|         ├── test_profile_route.py
+|         ├── test_user_route.py
+│   
+├── docker-compose.png  
 ├── docker-compose.yml
 └── .env
 
