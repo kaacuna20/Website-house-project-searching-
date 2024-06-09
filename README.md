@@ -44,15 +44,11 @@ Website-house-project-searching/
 ├── nginx/
 │   ├── Dockerfile
 │   └── nginx.conf
-├── webapp-house-finder/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── # other Flask app files
 ├── api-house-finder/
 │   ├── Dockerfile
 │   ├── requirements.txt
 │   ├── run.py
-│   ├── app/
+│   └── app/
 │      ├── __init__.py
 │      ├── database.py
 │      ├── main.py
@@ -73,7 +69,7 @@ Website-house-project-searching/
 │   ├── requirements.txt
 │   ├── run.py
 |   ├── config.py
-│   ├── app/
+│   └── app/
 │      ├── __init__.py
 │      ├── models.py
 │      ├── auth/
