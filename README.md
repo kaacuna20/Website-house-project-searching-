@@ -20,6 +20,7 @@
 This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
 
 ## Table of Contents
+- [Project Structure](#Project-Structure)
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Configuration](#configuration)
@@ -32,6 +33,29 @@ This project is a Dockerized setup for the House Finder application, consisting 
 - [Volumes](#volumes)
 - [Running the Application](#running-the-application)
 - [Diagram](#diagram)
+
+## Project Structure
+```ini
+Website-house-project-searching/
+├── images/
+│   ├── api/
+│   ├── profile/
+├── postgresql_db/
+├── nginx/
+│   ├── Dockerfile
+│   └── nginx.conf
+├── webapp-house-finder/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── # other Flask app files
+├── api-house-finder/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── # other FastAPI app files
+├── docker-compose.yml
+└── .env
+
+```
 
 ## Overview
 
