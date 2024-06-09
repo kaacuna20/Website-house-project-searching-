@@ -39,7 +39,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
 Website-house-project-searching/
 ├── images/
 │   ├── api/
-│   ├── profile/
+│   └── profile/
 ├── postgresql_db/
 ├── nginx/
 │   ├── Dockerfile
@@ -62,7 +62,7 @@ Website-house-project-searching/
 │      │     └── normalize_text.py
 │      ├── routers/	
 │      │  ├── __init__.py
-│      │   └── projects.py
+│      │  └── projects.py
 │      ├── utils/	
 │      │  ├── __init__.py
 │      │  └── auth.py
@@ -100,7 +100,7 @@ Website-house-project-searching/
 |         ├── conftest.py
 |         ├── test_api_route.py
 |         ├── test_profile_route.py
-|         ├── test_user_route.py
+|         └── test_user_route.py
 │   
 ├── docker-compose.png  
 ├── docker-compose.yml
