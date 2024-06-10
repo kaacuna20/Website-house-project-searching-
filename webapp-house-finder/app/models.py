@@ -61,7 +61,7 @@ class User(db.Model, UserMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
-    username: Mapped[str] = mapped_column(String(100))
+    username: Mapped[str] = mapped_column(String(100), unique=True)
     name: Mapped[str] = mapped_column(String(100))
     lastname: Mapped[str] = mapped_column(String(100))
     city: Mapped[str] = mapped_column(String(100))
