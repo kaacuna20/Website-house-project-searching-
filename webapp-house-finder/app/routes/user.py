@@ -21,7 +21,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         # Check if user email is already present in the database.
-        user = db.session.execute(db.select(User).where(User.email == form.email.data)).scalar()
+        user = User.query.filter((User.email == form.email_user.data) | (User.username == form.email_user.data)).first()
         if user:
             # User already exists
             flash("Ya estas registrado, ve e inicia sección!")
@@ -57,7 +57,7 @@ def login():
         user = User.query.filter((User.email == form.email_user.data) | (User.username == form.email_user.data)).first()
         # Email doesn't exist
         if not user:
-            flash('El correo no existe, por favor trate de nuevo.')
+            flash('El correo o usuario no existe, por favor trate de nuevo.')
             return redirect(url_for('user.register'))
         # Password incorrect
         elif not check_password_hash(user.password, password):
