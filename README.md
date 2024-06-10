@@ -4,7 +4,7 @@
 	</div>
 </div>
 
-<h4 align="justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS, Bootstrap, Python and two of their frameworks, FastApi and Flask and last, conect all this using docker containers.</h4> 
+<h4 align="justify">In the Atlantico department - Colombia, there are many housing projects, of many types (VIS, VIP, NO VIS) where people of all classes can get their own home, but there are many options and I thought the following, why not create a website where people can search all options in one site instead to do it website by website? I decided start to create my first big project, using my knowlegde of HTML, CSS, Bootstrap, Python and two of its frameworks, FastApi and Flask and last, conect all this using docker containers.</h4> 
 
 ### Features of aplication
 
@@ -20,6 +20,7 @@
 This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
 
 ## Table of Contents
+- [Project Structure](#Project-Structure)
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Configuration](#configuration)
@@ -32,6 +33,76 @@ This project is a Dockerized setup for the House Finder application, consisting 
 - [Volumes](#volumes)
 - [Running the Application](#running-the-application)
 - [Diagram](#diagram)
+
+## Project Structure
+```ini
+Website-house-project-searching/
+├── images/
+│   ├── api/
+│   └── profile/
+├── postgresql_db/
+├── nginx/
+│   ├── Dockerfile
+│   └── nginx.conf
+├── api-house-finder/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── run.py
+│   └── app/
+│      ├── __init__.py
+│      ├── database.py
+│      ├── main.py
+│      ├── models.py
+│      ├── helper/
+│      │     ├── download_img.py
+│      │     └── normalize_text.py
+│      ├── routers/	
+│      │  ├── __init__.py
+│      │  └── projects.py
+│      ├── utils/	
+│      │  ├── __init__.py
+│      │  └── auth.py
+│      └── test_project.py
+│
+├── webapp-house-finder/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── run.py
+|   ├── config.py
+│   └── app/
+│      ├── __init__.py
+│      ├── models.py
+│      ├── auth/
+│      │     ├── __init__.py
+│      │     └── forms.py
+|      ├── common/
+│      │     ├── __init__.py
+│      │     └── mail.py
+│      ├── routers/	
+│      │   ├── __init__.py
+|      │   ├── api_documentation.py
+|      │   ├── api.py
+|      │   ├── index.py
+|      │   ├── profile.py
+|      │   ├── user.py
+│      │   └── project.py
+|      ├── templates/
+|      ├── static/
+│      ├── utils/	
+│      │  ├── __init__.py
+│      │  └── helpers.py
+│      └── test/
+|         ├── __init__.py
+|         ├── conftest.py
+|         ├── test_api_route.py
+|         ├── test_profile_route.py
+|         └── test_user_route.py
+│   
+├── docker-compose.png  
+├── docker-compose.yml
+└── .env
+
+```
 
 ## Overview
 
@@ -151,7 +222,6 @@ POSTGRES_DB=your_postgres_db
 
    `docker-compose down`
 
-<<<<<<< HEAD
 ## Diagram
 - Below is a visual representation of the Docker Compose setup:
 
