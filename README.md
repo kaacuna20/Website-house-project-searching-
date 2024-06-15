@@ -31,6 +31,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
   - [postgresql_db](#postgresql_db)
 - [Networks](#networks)
 - [Volumes](#volumes)
+- [Testing app services](#Testing-app-service)
 - [Running the Application](#running-the-application)
 - [Diagram](#diagram)
 
@@ -160,6 +161,34 @@ POSTGRES_DB=your_postgres_db
      - `DEBUG=False`
 - Dependencies: `postgresql_db`
 - Network: `house_finder_web`
+
+The Dockerfile configuration is the next:
+```init
+FROM python:3.8-slim
+
+RUN apt-get update && \
+    apt-get install -y locales && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen en_US.UTF-8
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+WORKDIR /app
+
+COPY requirements.txt ./
+
+RUN pip install -r requirements.txt
+
+RUN pip install pytest
+
+COPY . .
+
+EXPOSE 5003
+
+CMD ["gunicorn", "run:app", "-w", "4", "--bind", "0.0.0.0:5003"]
+```
   
 ### api_house_finder
 - Description: This service runs the FastAPI application.
@@ -174,6 +203,22 @@ POSTGRES_DB=your_postgres_db
      - `SECRET_APP_KEY`
 - Dependencies: `postgresql_db`
 - Network: `house_finder_web`
+The Dockerfile configuration is the next:
+```init
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+RUN pip install pytest
+
+COPY . .
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
 
 ### nginx
 - Description: This service runs the NGINX reverse proxy.
@@ -181,6 +226,15 @@ POSTGRES_DB=your_postgres_db
 - Ports: `80:80`
 - Dependencies: `webapp_house_finder`, `api_house_finder`
 - Network: `house_finder_web`
+The Dockerfile configuration is the next:
+
+```init
+FROM nginx:latest
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+```
 
 ### postgresql_db
 - Description: This service runs the PostgreSQL database.
@@ -202,6 +256,44 @@ POSTGRES_DB=your_postgres_db
 ## Volumes
 - postgresql-data: Stores PostgreSQL data.
 - images: Stores images used by the applications.
+
+## Testing app services
+In same `.env` file in the root directory of your project with the following test variables:
+```ini
+# .env file
+TEST_CONFIGURATION_SETUP=TEST_CONFIG_FLASKAPP
+TEST_DB_URL=SQLITE_URL_TESTING
+TEST_APIKEY=TEST_CREDENTIALS_APIKEY
+TEST_TOKEN=TEST_CREDENTIALS_TOKENSECRET
+```
+Docker compose configuration we add the next:
+
+```ini
+  test_fastapi:
+    build:
+      context: ./api-house-finder
+      dockerfile: Dockerfile
+    command: ["pytest"]
+    environment:
+      - DB_URL=${TEST_DB_URL}
+      - TEST_APIKEY=${TEST_APIKEY}
+      - TEST_TOKEN=${TEST_TOKEN}
+    depends_on:
+      - postgresql_db
+    env_file:
+      - .env
+
+  test_flask:
+    build:
+      context: ./webapp-house-finder
+      dockerfile: Dockerfile
+    command: ["pytest", "app/tests/"]
+    environment:
+      - TEST_CONFIGURATION_SETUP=${TEST_CONFIGURATION_SETUP}
+    env_file:
+      - .env
+
+```
 
 ## Running the Application
 
