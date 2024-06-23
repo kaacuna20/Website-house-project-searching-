@@ -31,7 +31,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
   - [postgresql_db](#postgresql_db)
 - [Networks](#networks)
 - [Volumes](#volumes)
-- [Testing app services](#Testing-app-service)
+- [Testing app services](#Testing-app-services)
 - [Running the Application](#running-the-application)
 - [Diagram](#diagram)
 
