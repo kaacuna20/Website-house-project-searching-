@@ -9,7 +9,7 @@
 ### Features of aplication
 
 - Let view housing projects in Atlantico - Colombia, specifically in Puerto Colombia, Barranquilla and Soledad city, filter the search by construction company, location and city;
-- User can register and login section, personalize their profiles and save their favorites projects on their accounts;
+- User can register and login session, personalize their profiles and save their favorites projects on their accounts;
 - got the option to change their passwords or get a new password in section forgot password where the new password is sent to their email;
 - Each project page there is a comment section where each user can leave their opinions about the project;
 - There is a section for developer where can read the documentation about the API, whatching the routes to make the requests, the differents responses and restrictions;
@@ -20,7 +20,7 @@
 This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
 
 ## Table of Contents
-- [Project Structure](#Project-Structure)
+- [Project Structure](#project-structure)
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Configuration](#configuration)
@@ -31,7 +31,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
   - [postgresql_db](#postgresql_db)
 - [Networks](#networks)
 - [Volumes](#volumes)
-- [Testing app services](#Testing-app-services)
+- [Testing app services](#testing-app-services)
 - [Running the Application](#running-the-application)
 - [Diagram](#diagram)
 
