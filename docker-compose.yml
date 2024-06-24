@@ -60,6 +60,8 @@ services:
     depends_on:
       - webapp_house_finder
       - api_house_finder
+    environment:
+      - SERVER_NAME=${PRO_SERVER_NAME}
     networks:
       - house_finder_web
 
