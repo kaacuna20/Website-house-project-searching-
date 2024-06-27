@@ -13,13 +13,13 @@
             after that, you have to refresh on same section. To go the api service in swagger, you can go in next link.
         </p>
         <div>
-            <p>Link API_REST: <a href="http://localhost/docs">Api house-finder swagger</a></p>
+            <p>Link API_REST: <a href="/docs">Api house-finder swagger</a></p>
         </div>
 
     </header>
     <div class="album py-5 bg-body-tertiary" style="opacity:0.8;">
         <div class="container" >
-            <div><span class="servers-title">Server</span><div class="servers"><label for="servers"><select><option>http://localhost:8000</option></select></label></div></div>
+            <div><span class="servers-title">Server</span><div class="servers"><label for="servers"><select><option>{{ server }}</option></select></label></div></div>
             <div>
                 <div class="accordion" id="accordionExample" >
                     <!-- GET request for all project filtered by location-->
@@ -42,7 +42,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
               import requests
 
-              url = "http://localhost/api/v1/location?loc={location}"
+              url = "{{ server }}/api/v1/location?loc={location}"
 
               headers = {
                 'Api-key': '{public_apikey}'
@@ -56,7 +56,7 @@
                                     <p>
                                         To get characters you need to make a GET call to the following url, for example:<br>
                                         user search by location "Ciudad mallorquin":
-                                        <code class="higlighted break-word">http://localhost/api/v1/location?&loc=ciudad mallorquin<br>
+                                        <code class="higlighted break-word">{{ server }}/api/v1/location?&loc=ciudad mallorquin<br>
                                            
                                         </code>
                                         <code class="higlighted break-word">
@@ -224,7 +224,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
                 import requests
 
-                url = "http://localhost/api/v1/company?company={company}"
+                url = "{{ server }}/api/v1/company?company={company}"
 
                 headers = {
                     'Api-key': '{public_apikey}'
@@ -238,7 +238,7 @@
                                         <p>
                                             To get characters you need to make a GET call to the following url, for example :<br>
                                             user search by city "Puerto Colombia", the endpoint is:
-                                            <code class="higlighted break-word">http://localhost/api/v1/company?api_key=UserSecretAPIKey&company=amarilo<br>
+                                            <code class="higlighted break-word">{{ server }}/api/v1/company?api_key=UserSecretAPIKey&company=amarilo<br>
                                                
                                             </code>
                                             <code class="higlighted break-word">
@@ -424,7 +424,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
                 import requests
 
-                url = "http://localhost/api/v1/project-details?project_id={id}"
+                url = "{{ server }}/api/v1/project-details?project_id={id}"
 
                 headers = {
                     'Api-key': '{public_apikey}'
@@ -438,7 +438,7 @@
                                         <p>
                                             To get characters you need to make a GET call to the following url, for example :<br>
                                             user search by city "Puerto Colombia", the endpoint is:
-                                            <code class="higlighted break-word">http://localhost/api/v1/project-details?project_id=17<br>
+                                            <code class="higlighted break-word">{{ server }}/api/v1/project-details?project_id=17<br>
                                                 
                                             </code>
                                             <code class="higlighted break-word">
@@ -549,7 +549,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
                 import requests
 
-                url = "http://localhost/api/v1/city?city={city}"
+                url = "{{ server }}/api/v1/city?city={city}"
                 headers = {
                     'Api-key': '{public_apikey}'
                   }
@@ -562,7 +562,7 @@
                                         <p>
                                             To get characters you need to make a GET call to the following url, for example :<br>
                                             user search by city "Puerto Colombia", the endpoint is:
-                                            <code class="higlighted break-word">http://localhost/api/v1/city?city=soledad<br>
+                                            <code class="higlighted break-word">{{ server }}/api/v1/city?city=soledad<br>
                                             </code>
                                             <code class="higlighted break-word">
                                                 headers = {
@@ -766,7 +766,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
                import requests
 
-                url = "http://localhost/api/v1/update-price/?&new_price={new_price}&project_id={project_id}"
+                url = "{{ server }}/api/v1/update-price/?&new_price={new_price}&project_id={project_id}"
 
                 headers = {
                     'Api-key': '{public_apikey}',
@@ -782,7 +782,7 @@
                                             <p>
                                                 To get characters you need to make to PATH call to the following url, for example :<br>
                                                 administrator user patch new_price=350.020.000 - 556.960.000, the endpoint is:<br>
-                                                <code class="higlighted break-word">http://localhost/api/v1/update-price/?new_price=350020000 - 556.960.000&project_id=2<br>
+                                                <code class="higlighted break-word">{{ server }}/api/v1/update-price/?new_price=350020000 - 556.960.000&project_id=2<br>
                                                 </code>
                                                 <code class="higlighted break-word">
                                                     headers = {
@@ -894,7 +894,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
                 import requests
 
-                url = "http://localhost/api/v1/add-project?name={name}&logo={logo}&location={location}&
+                url = "{{ server }}/api/v1/add-project?name={name}&logo={logo}&location={location}&
                                 city={city}&company={company}&address={address}&url_map={url_map}&contact={contact}&
                                 area={area}&price={price}&type={type}&description={description} &url_website={url_website}"
 
@@ -915,7 +915,7 @@
                                                     contact=(607) 633 3987, area=46.99, price=175000000, type=vis, img_url=https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg,
                                                     description="El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico." y
                                                     url_website=https://marval.com.co/proyecto/aquanova/. the endpoint is:<br>
-                                                    <code class="higlighted break-word">http://localhost/api/v1/add-project?name=Aquanova&logo=https://ciudadmallorquin.com/images/logos/logo-aquanova.png&location=Ciudad Mallorquín&city=Puerto colombia&company=marval&address=Calle 100 con carrera 52 esquina - Barrio La Castellana&url_map=http://maps.google.com/?q=Norte%20de%20Barranquilla%20-%20Sala%20de%20Ventas%20VIP%20-%20Calle%20100%20con%20carrera%2052%20esquina%20-%20Barrio%20La%20Castellana&contact=(607) 633 3987&area=46.99&price=175.000.000&type=vis&img_url=https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg&description=El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico. &url_website=https://marval.com.co/proyecto/aquanova/<br>
+                                                    <code class="higlighted break-word">{{ server }}/api/v1/add-project?name=Aquanova&logo=https://ciudadmallorquin.com/images/logos/logo-aquanova.png&location=Ciudad Mallorquín&city=Puerto colombia&company=marval&address=Calle 100 con carrera 52 esquina - Barrio La Castellana&url_map=http://maps.google.com/?q=Norte%20de%20Barranquilla%20-%20Sala%20de%20Ventas%20VIP%20-%20Calle%20100%20con%20carrera%2052%20esquina%20-%20Barrio%20La%20Castellana&contact=(607) 633 3987&area=46.99&price=175.000.000&type=vis&img_url=https://marval.com.co/wp-content/uploads/2022/12/marval-galeria-aquanova-01.jpg&description=El proyecto Aquanova, es un conjunto tipo VIS se encuentra ubicado en el desarrollo urbanístico Ciudad Mallorquín, en el municipio de Puerto Colombia al noroccidente del departamento del Atlántico. &url_website=https://marval.com.co/proyecto/aquanova/<br>
                                                     </code>
                                                     <code class="higlighted break-word">
                                                         headers = {
@@ -1085,7 +1085,7 @@
               <span class="hljs-comment"># Here is a curl example</span>
         import requests
 
-        url = "http://localhost/api/v1/project-closed?project_id={project_id}"
+        url = "{{ server }}/api/v1/project-closed?project_id={project_id}"
 
         headers = {
             'Api-key': '{public_apikey}',
@@ -1100,7 +1100,7 @@
                                             <p>
                                                 To get characters you need to make a DELETE call to the following url, for example:<br>
                                                 administrator user delete project with id_project=5, the endpoint is:
-                                                <code class="higlighted break-word">http://localhost/api/v1/project-closed?project_id=5<br>
+                                                <code class="higlighted break-word">{{ server }}/api/v1/project-closed?project_id=5<br>
                                                 </code>
                                                 <code class="higlighted break-word">
                                                     headers = {

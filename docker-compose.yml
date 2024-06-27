@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 networks:
   house_finder_web:
@@ -24,6 +24,7 @@ services:
       - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
       - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
       - DEBUG=False
+      - SERVER_NAME=${PRO_SERVER_NAME}
     depends_on:
       - postgresql_db
     env_file:
@@ -57,6 +58,11 @@ services:
     restart: always
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl/cert.pem:/etc/nginx/ssl/cert.pem
+      - ./nginx/ssl/key.pem:/etc/nginx/ssl/key.pem   
     depends_on:
       - webapp_house_finder
       - api_house_finder
@@ -87,3 +93,5 @@ volumes:
   postgresql-data:
   images:
 
+
+     
