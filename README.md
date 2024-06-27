@@ -374,11 +374,13 @@ Docker compose configuration we add the next:
   openssl req -x509 -nodes -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
   ```
 
-8. Configure the nginx.conf with nano to enable HTTPS conextion in port 443:
+8. Configure the nginx.conf with nano to enable HTTPS connection in port 443:
   ```ini
   cd /Website-house-project-searching-/nginx/
   sudo nano nginx.conf
+```
 
+```ini
   events { }
 
 http {
@@ -476,7 +478,9 @@ http {
 9. Modify Dockerfile to copy the ssl certificates:
   ```ini
   sudo nano Dockerfile
+```
 
+```ini
   FROM nginx:latest
 
   RUN mkdir -p /etc/nginx/ssl
@@ -496,7 +500,9 @@ http {
   ```ini
   cd Website-house-project-searching-
   sudo nano docker-compose-yml
+```
 
+```ini
   version: "3.8"
 
   networks:
