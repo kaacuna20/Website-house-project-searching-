@@ -70,7 +70,7 @@
 			<!-- Load Bootstrap-Flask CSS here -->
 			{% if not current_user.is_authenticated: %}
 			<div class="text-end">
-				<a href="{{url_for('user.login')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar sección</button></a>
+				<a href="{{url_for('user.login')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar sesión</button></a>
 			</div>
 			<a href="{{url_for('user.register')}}"><button type="button" class="btn btn-warning">Registrarse</button></a>
 		</div>
