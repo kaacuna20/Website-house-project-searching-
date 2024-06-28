@@ -599,6 +599,9 @@ http {
     images:
   ```
 
+11. Modify `.env` :
+   - To change environment variable `PRO_SERVER_NAME`, if you don't have domain, use the `Public IPv4 DNS` or `Public IPv4 address` EC2 instance.
+
 11. Run Docker Compose to start your application:
   ```ini
   sudo docker-compose up -d --build
