@@ -12,6 +12,7 @@ router = APIRouter()
 
 @router.get("/api/v1/location")
 async def project_by_location(loc: str, db: Session = Depends(get_db), user: User = Depends(api_key_auth)):
+    """Retrieve projects filtered by location"""
     query_loc = normalize_text(loc.title())
     locate_project = db.query(Project).filter(Project.location == query_loc).all()
     if locate_project:
@@ -21,6 +22,7 @@ async def project_by_location(loc: str, db: Session = Depends(get_db), user: Use
 
 @router.get("/api/v1/city")
 async def project_by_city(city: str, db: Session = Depends(get_db), user: User = Depends(api_key_auth)):
+    """Retrieve projects filtered by city"""
     query_city = normalize_text(city.title())
     locate_project = db.query(Project).filter(Project.city == query_city).all()
     if locate_project:
@@ -30,6 +32,7 @@ async def project_by_city(city: str, db: Session = Depends(get_db), user: User =
 
 @router.get("/api/v1/company")
 async def project_by_company(company: str, db: Session = Depends(get_db), user: User = Depends(api_key_auth)):
+    """	Retrieve projects filtered by company"""
     query_company = normalize_text(company.upper())
     locate_project = db.query(Project).filter(Project.company == query_company).all()
     if locate_project:
@@ -39,6 +42,7 @@ async def project_by_company(company: str, db: Session = Depends(get_db), user: 
 
 @router.get("/api/v1/project-details")
 async def project(project_id: int, db: Session = Depends(get_db), user: User = Depends(api_key_auth)):
+    """	Retrieve a individual project"""
     project = db.query(Project).filter(Project.id == project_id).first()
     if project:
         return {project.name: project.to_dict()}, 200
@@ -51,6 +55,7 @@ async def post_new_project(
     contact: str, area: float, price: int, type: str, img_url: str, description: str, url_website: str,
     db: Session = Depends(get_db), user: User = Depends(api_key_auth)
 ):
+    """	Create a new project in server"""
     try:
         
         bg_url = dowmload_bg_images_from_urls(
@@ -93,6 +98,7 @@ async def post_new_project(
 
 @router.patch("/api/v1/update-price")
 async def update_new_project_price(project_id: int, new_price: int, db: Session = Depends(get_db), user: User = Depends(token_auth)):
+    """	Update price of individual project"""
     project = db.query(Project).filter(Project.id == project_id).first()
     if project:
         project.price = new_price
@@ -103,6 +109,7 @@ async def update_new_project_price(project_id: int, new_price: int, db: Session 
 
 @router.delete("/api/v1/project-closed")
 async def delete_project(project_id: int, db: Session = Depends(get_db), user: User = Depends(token_auth)):
+    """	Delete a particular project"""
     project = db.query(Project).filter(Project.id == project_id).first()
     if project:
         db.delete(project)
