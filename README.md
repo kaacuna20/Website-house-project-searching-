@@ -327,7 +327,7 @@ Docker compose configuration we add the next:
 ## Deployment on AWS EC2
 ### Prerequisites
 - AWS Account
-- EC2 instance (Free tier, Amazon Linux)
+- EC2 instance (Free tier, Amazon Linux 2 AMI)
 - GitHub repository with your project
 
 ### Steps
