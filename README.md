@@ -371,7 +371,7 @@ Docker compose configuration we add the next:
 
 7. Generate a self-signed SSL certificate (if you do not have a domain name):
   ```ini
-  openssl req -x509 -nodes -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+  sudo openssl req -x509 -nodes -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
   ```
 
 8. Configure the nginx.conf with nano to enable HTTPS connection in port 443:
