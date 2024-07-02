@@ -365,6 +365,7 @@ Docker compose configuration we add the next:
 5. Clone your GitHub repository:
 
  ```ini
+  sudo yum install git -y
   sudo git clone https://github.com/kaacuna20/Website-house-project-searching-.git
   ```
 
