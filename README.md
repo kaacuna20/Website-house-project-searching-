@@ -15,6 +15,8 @@
 - There is a section for developer where can read the documentation about the API, whatching the routes to make the requests, the differents responses and restrictions;
 - Developers can generate their apikey to be allowed making requests;
 
+You can test and enjoy the project in next enlace: http://ec2-3-15-233-85.us-east-2.compute.amazonaws.com/
+
 ### Dockerized  House Finder
 
 This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
