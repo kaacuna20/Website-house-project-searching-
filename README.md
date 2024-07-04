@@ -362,24 +362,31 @@ Docker compose configuration we add the next:
   sudo systemctl enable docker
   ```
 
-5. Clone your GitHub repository:
+5. Create a directory to paste files of project:
 
  ```ini
-  sudo yum install git -y
-  sudo git clone https://github.com/kaacuna20/Website-house-project-searching-.git
+    sudo mkdir house-finder
   ```
 
-6. Transfer your Docker Compose file and `.env` file to the EC2 instance.
-  - You can use `scp` or any preferred method to transfer these files.
+6. Transfer your Docker Compose file (docker-compose.yml) and directories from your local to the EC2 instance using scp or any preferred method:
+  ```ini
+    ssh -i vs-kp-1.pem ec2-user@ec2_public_ip
+    sudo chmod 755 /home/ec2-user/house-finder
+    exit
+    chmod 600 vs-kp-1.pem
+    scp -i vs-kp-1.pem docker-compose.yml  ec2-user@ec2_public_ip:/home/ec2-user/house-finder
+    scp -i vs-kp-1.pem -r images/ webapp-house-finder/ api-house-finder/ postgresql_data/  nginx/ ec2-user@ec2_public_ip:/home/ec2-user/house-finder
+  ```
 
 7. Generate a self-signed SSL certificate (if you do not have a domain name):
   ```ini
+  cd /house-finder/nginx/ssl/
   sudo openssl req -x509 -nodes -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
   ```
 
 8. Configure the nginx.conf with nano to enable HTTPS connection in port 443:
   ```ini
-  cd /Website-house-project-searching-/nginx/
+  cd /house-finder/nginx/
   sudo nano nginx.conf
 ```
 
