@@ -5,7 +5,6 @@ from secrets import token_urlsafe
 from app.models import User
 from app.models import db
 from app.auth.forms import LoginForm, RegisterForm
-import asyncio
 from app.common.mail import send_email
 from smtplib import SMTPException
 from flask import current_app
@@ -21,10 +20,10 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         # Check if user email is already present in the database.
-        user = User.query.filter((User.email == form.email_user.data) | (User.username == form.email_user.data)).first()
+        user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if user:
             # User already exists
-            flash("Ya estas registrado, ve e inicia sección!")
+            flash("El correo o usuarion ya estas registrado, inicia sección!")
             return redirect(url_for('user.login'))
 
         new_user = User(

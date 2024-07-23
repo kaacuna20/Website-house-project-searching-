@@ -3,13 +3,15 @@ import unicodedata
 
 
 def format_currency(price):
+    if price is None:
+        return "Precio no disponible"
+    
     try:
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     except locale.Error:
         try:
             locale.setlocale(locale.LC_ALL, '')
         except locale.Error:
-            # Fallback to a basic formatting if locale setting fails
             return "${:,.2f}".format(price)
     return locale.currency(price, grouping=True)
 

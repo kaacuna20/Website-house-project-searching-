@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 import jwt
 import datetime
 import pytz
-from app.models import User, Project
+from app.models import User
 from app.models import db
 from os import environ
 import secrets
@@ -19,7 +19,7 @@ api_bp = Blueprint('api', __name__)
 def generate_token():
     # set the zone
     tz = pytz.timezone("America/Bogota")
-    user_id = current_user.id
+    user_id = current_user.user_id
     user = db.get_or_404(User, user_id)
     # Verify if user is registered in database
     if not user:
@@ -33,7 +33,7 @@ def generate_token():
 
     # Generate the admin token just for admin
     if user.is_admin:
-        admin_token = str(secrets.randbelow(10**12))
+        admin_token = str(secrets.randbelow(10**25))
         user.token_secret = admin_token
         user.token_secret_expires = datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
         db.session.commit()

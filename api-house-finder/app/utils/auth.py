@@ -25,7 +25,6 @@ class TokenException(HTTPException):
 
 
 async def get_user_by_api_key(db: Session, api_key: str) -> Optional[User]:
-    logger.info(f"Checking API key: {api_key}")
     return db.query(User).filter(User.api_key == api_key).first()
 
 
@@ -34,7 +33,6 @@ async def get_user_by_token(db: Session, token: str) -> Optional[User]:
        
 
 async def api_key_auth(api_key: str = Depends(APIKeyHeader(name="Api-Key")), db: Session = Depends(get_db)):
-    logger.info(f"Received API key: {api_key}")
     user = await get_user_by_api_key(db, api_key)
     if user is None or user.api_key_expires < datetime.datetime.now():
         logger.warning(f"API key authentication failed for key: {api_key}")

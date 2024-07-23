@@ -33,7 +33,7 @@ def delete_project_user(user_id, project_id):
 @profile_bp.route("/user")
 @login_required
 def user_projects():
-    user_id = current_user.id
+    user_id = current_user.user_id
     user = User.query.get(user_id)
     saved_projects = user.saved_projects.all()
     return render_template("projects_by_user.html", my_projects=saved_projects, current_user=current_user)
@@ -51,7 +51,7 @@ def allowed_file(filename):
 @profile_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    user_id = current_user.id
+    user_id = current_user.user_id
     user_db = db.get_or_404(User, user_id)
     # edit profile section
     if request.method == 'POST':
@@ -81,7 +81,7 @@ def edit_profile():
 @profile_bp.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
-    user_id = current_user.id
+    user_id = current_user.user_id
     user_db = db.get_or_404(User, user_id)
     # change password section
     change_password_section = ChangePasswordForm()

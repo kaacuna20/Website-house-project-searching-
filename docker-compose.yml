@@ -17,16 +17,16 @@ services:
       - ./images/api:/app/app/static/images/img-projects
       - ./images/profile:/app/app/static/images/img-profile
     environment:
-      - DB_URL=${PRO_DB_URL}
+      - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}
       - FLASK_APP=${FLASK_APP}
-      - CONFIGURATION_SETUP=${PRO_CONFIGURATION_SETUP}
+      - CONFIGURATION_SETUP=${CONFIGURATION_SETUP}
       - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
       - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
       - DEBUG=False
-      - SERVER_NAME=${PRO_SERVER_NAME}
+      - SERVER_NAME=${SERVER_NAME}
     depends_on:
-      - postgresql_db
+      - mysql_db
     env_file:
       - .env
     networks:
@@ -43,10 +43,10 @@ services:
     volumes:
       - ./images/api:/app/app/static/images/img-projects
     environment:
-      - DB_URL=${PRO_DB_URL}
+      - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}
     depends_on:
-      - postgresql_db
+      - mysql_db
     env_file:
       - .env
     networks:
@@ -67,31 +67,31 @@ services:
       - webapp_house_finder
       - api_house_finder
     environment:
-      - SERVER_NAME=${PRO_SERVER_NAME}
+      - SERVER_NAME=${SERVER_NAME}
     networks:
       - house_finder_web
 
 
-  postgresql_db:
-    container_name: postgresql_db
-    image: postgres:12
+  mysql_db:
+    container_name: mysql_db
+    image: mysql:latest
     restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - ./postgresql_data:/var/lib/postgresql/data 
+      - ./mysql_db/mysql_data:/var/lib/mysql
+      - ./mysql_db/scripts_sql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     env_file:
       - .env
     networks:
       - house_finder_web
 
+
 volumes:
-  postgresql-data:
+  mysql_data:
   images:
-
-
-     

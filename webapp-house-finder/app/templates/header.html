@@ -38,6 +38,12 @@
 		height: 250px; /* Set a fixed height for the image */
 		object-fit: cover; /* Ensure the image covers the entire space */
 	}
+	#map {
+		width: 100%;
+		height: 100vh;
+		margin: 0;
+		padding: 0;
+	}
 	</style>
 	{% endblock %}
 </head>
@@ -60,11 +66,14 @@
 						API
 					</a>
 					<ul class="dropdown-menu ">
-						<li><a class="dropdown-item" href="{{ url_for('api_doc.documentation_api') }}">Documentation</a></li>
+						<li><a class="dropdown-item" href="/docs">Documentation</a></li>
 						{% if current_user.is_authenticated: %}
 						<li><a class="dropdown-item" href="{{ url_for('api_doc.get_api_key') }}">Generate API key</a></li>
 						{% endif %}
 					</ul>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{url_for('maps.maps_projects')}}">Map</a>
 				</li>
 			</ul>
 			<!-- Load Bootstrap-Flask CSS here -->

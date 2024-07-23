@@ -19,7 +19,7 @@
 				</div>
 				<p class="lead" style="text-align: justify;">{{ project.description }}</p>
 				<div class="d-grid gap-2 d-md-flex justify-content-md-start">
-					<a href="{{project.url_map}}"><button type="button" class="btn btn-success">Ubicación</button></a>
+					<a href="{{ url_for('maps.ubication_projects', slug=project.slug) }}"><button type="button" class="btn btn-success">Ubicación</button></a>
 				</div>
 			</div>
 		</div>

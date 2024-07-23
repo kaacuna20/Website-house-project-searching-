@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Float, CheckConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Float, CheckConstraint, Text
 from sqlalchemy.ext.declarative import declarative_base
 from slugify import slugify
 
@@ -8,17 +8,17 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, primary_key=True, index=True)
     email = Column(String(100), unique=True, index=True)
-    password = Column(String(100))
-    username = Column(String(100), unique=True)
+    password = Column(String(200))
+    username = Column(String(100))
     name = Column(String(100))
     lastname = Column(String(100))
     city = Column(String(100))
-    photo = Column(String(200), nullable=False)
+    photo = Column(String(200), nullable=True)
     api_key = Column(String(200), unique=True, nullable=True)
     api_key_expires = Column(DateTime, nullable=True)
-    token_secret = Column(String(500), nullable=True)
+    token_secret = Column(String(200), nullable=True)
     token_secret_expires = Column(DateTime, nullable=True)
     is_admin = Column(Boolean, default=False)
 
@@ -26,23 +26,24 @@ class User(Base):
 class Project(Base):
     __tablename__ = "projects"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(250), unique=True, nullable=False)
+    project_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), unique=True, nullable=False)
     logo = Column(String(250), nullable=False)
-    location = Column(String(250), nullable=False)
-    city = Column(String(250), nullable=False)
-    company = Column(String(250), nullable=False)
-    address = Column(String(250), nullable=False)
-    url_map = Column(String(500), nullable=False)
-    contact = Column(String(250), nullable=False)
+    location = Column(String(150), nullable=False)
+    city = Column(String(100), nullable=False)
+    company = Column(String(100), nullable=False)
+    address = Column(String(200), nullable=False)
+    contact = Column(String(50), nullable=False)
     area = Column(Float, nullable=False)
     price = Column(Integer, nullable=False)
-    type = Column(String(250), nullable=False)
-    img_url = Column(String(500), nullable=False)
-    description = Column(String, nullable=False)
+    type = Column(String(20), nullable=False)
+    img_url = Column(String(300), nullable=False)
+    description = Column(Text, nullable=False)
     url_website = Column(String(250), unique=True, nullable=False)
     slug = Column(String(250), unique=True, nullable=False, index=True)
-
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    
     def to_dict(self):
         # Loop through each column in the data record in a dictionary
         # where the key is the name of the column

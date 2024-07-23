@@ -44,7 +44,13 @@ Website-house-project-searching/
 ├── images/
 │   ├── api/
 │   └── profile/
-├── postgresql_db/
+├── mysql_db/
+│   ├── mysql_data/
+│   └── scripts_sql/
+│        ├── 01_users.sql
+│        ├── 02_projects.sql
+│        ├── 03_projects_user.sql
+│        └── 04_comments.sql
 ├── nginx/
 │   ├── Dockerfile
 │   ├── nginx.conf
@@ -118,7 +124,7 @@ This setup uses Docker Compose to manage the following services:
 1. **Flask Web Application** (`webapp_house_finder`)
 2. **FastAPI API** (`api_house_finder`)
 3. **NGINX Reverse Proxy** (`nginx`)
-4. **PostgreSQL Database** (`postgresql_db`)
+4. **MySQL Database** (`mysql_db`)
 
 All services are connected via a custom Docker network called `house_finder_web`.
 
@@ -135,17 +141,25 @@ All services are connected via a custom Docker network called `house_finder_web`
 Create a `.env` file in the root directory of your project with the following variables:
 
 ```ini
-# .env file
-PRO_DB_URL=your_database_url
+# MYSQL_DB
+MYSQL_ROOT_PASSWORD=your_mysql_root_password
+MYSQL_DATABASE=database_name
+MYSQL_USER=your_mysql_user
+MYSQL_PASSWORD=your_mysql_password
+
+
+# API_HOUSE_FINDER Y WEB_HOUSE_FINDER
 SECRET_APP_KEY=your_secret_key
+DB_URL=your_database_url
+
+
 FLASK_APP=your_flask_app
-PRO_CONFIGURATION_SETUP=your_configuration_setup
+CONFIGURATION_SETUP=your_configuration_setup
 APP_PASSWORD_EMAIL=your_app_password_email
 ADMINISTER_EMAIL=your_admin_email
-POSTGRES_PASSWORD=your_postgres_password
-POSTGRES_USER=your_postgres_user
-POSTGRES_DB=your_postgres_db
-PRO_SERVER_NAME=host
+
+# NGINX
+SERVER_NAME=host
 ```
 ## Services
 ### webapp_house_finder
@@ -243,17 +257,19 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 ```
 
-### postgresql_db
-- Description: This service runs the PostgreSQL database.
-- Image: `postgres:12`
-- Container Name: `postgresql_db`
-- Ports: `5432:5432`
+### mysql_db
+- Description: This service runs the MySQL database.
+- Image: `mysql:latest`
+- Container Name: `mysql_db`
+- Ports: `3306:3306`
 - Environment Variables:
-     - `POSTGRES_PASSWORD`
-     - `POSTGRES_USER`
-     - `POSTGRES_DB`
+     - `MYSQL_ROOT_PASSWORD`
+     - `MYSQL_DATABASE`
+     - `MYSQL_USER`
+     - `MYSQL_PASSWORD`
 - Volumes:
-     - `./postgresql_data:/var/lib/postgresql/data`
+     - `./mysql_db/mysql_data:/var/lib/mysql`
+     - `./mysql_db/scripts_sql:/docker-entrypoint-initdb.d`
 - Network:
      - `house_finder_web`
 
@@ -261,7 +277,7 @@ EXPOSE 80
 - house_finder_web: A custom network for connecting all the services.
 
 ## Volumes
-- postgresql-data: Stores PostgreSQL data.
+- mysql_data: Stores MySQL data.
 - images: Stores images used by the applications.
 
 ## Testing app services
@@ -513,100 +529,103 @@ http {
 ```
 
 ```ini
-  version: "3.8"
+version: "3.8"
 
-  networks:
-    house_finder_web:
+networks:
+  house_finder_web:
 
-  services:
-            
-    webapp_house_finder:
-      container_name: flask_house_finder
-      build:
-        context: ./webapp-house-finder
-        dockerfile: Dockerfile
-      restart: always
-      ports:
-        - "5003:5003"
-      volumes:
-        - ./images/api:/app/app/static/images/img-projects
-        - ./images/profile:/app/app/static/images/img-profile
-      environment:
-        - DB_URL=${PRO_DB_URL}
-        - SECRET_APP_KEY=${SECRET_APP_KEY}
-        - FLASK_APP=${FLASK_APP}
-        - CONFIGURATION_SETUP=${PRO_CONFIGURATION_SETUP}
-        - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
-        - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
-        - DEBUG=False
-        - SERVER_NAME=${PRO_SERVER_NAME}
-      depends_on:
-        - postgresql_db
-      env_file:
-        - .env
-      networks:
-        - house_finder_web
-    
-    api_house_finder:
-      container_name: fastapi_house_finder
-      build:
-        context: ./api-house-finder
-        dockerfile: Dockerfile
-      restart: always
-      ports:
-        - "8000:8000"
-      volumes:
-        - ./images/api:/app/app/static/images/img-projects
-      environment:
-        - DB_URL=${PRO_DB_URL}
-        - SECRET_APP_KEY=${SECRET_APP_KEY}
-      depends_on:
-        - postgresql_db
-      env_file:
-        - .env
-      networks:
-        - house_finder_web
+services:
+          
+  webapp_house_finder:
+    container_name: flask_house_finder
+    build:
+      context: ./webapp-house-finder
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./images/api:/app/app/static/images/img-projects
+      - ./images/profile:/app/app/static/images/img-profile
+    environment:
+      - DB_URL=${DB_URL}
+      - SECRET_APP_KEY=${SECRET_APP_KEY}
+      - FLASK_APP=${FLASK_APP}
+      - CONFIGURATION_SETUP=${CONFIGURATION_SETUP}
+      - APP_PASSWORD_EMAIL=${APP_PASSWORD_EMAIL}
+      - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
+      - DEBUG=False
+      - SERVER_NAME=${SERVER_NAME}
+    depends_on:
+      - mysql_db
+    env_file:
+      - .env
+    networks:
+      - house_finder_web
+  
+  api_house_finder:
+    container_name: fastapi_house_finder
+    build:
+      context: ./api-house-finder
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./images/api:/app/app/static/images/img-projects
+    environment:
+      - DB_URL=${DB_URL}
+      - SECRET_APP_KEY=${SECRET_APP_KEY}
+    depends_on:
+      - mysql_db
+    env_file:
+      - .env
+    networks:
+      - house_finder_web
 
-    nginx:
-      build:
-        context: ./nginx
-      restart: always
-      ports:
-        - "80:80"
-        - "443:443"
-      volumes:
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-        - ./nginx/ssl/cert.pem:/etc/nginx/ssl/cert.pem
-        - ./nginx/ssl/key.pem:/etc/nginx/ssl/key.pem   
-      depends_on:
-        - webapp_house_finder
-        - api_house_finder
-      environment:
-        - SERVER_NAME=${PRO_SERVER_NAME}
-      networks:
-        - house_finder_web
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl/cert.pem:/etc/nginx/ssl/cert.pem
+      - ./nginx/ssl/key.pem:/etc/nginx/ssl/key.pem   
+    depends_on:
+      - webapp_house_finder
+      - api_house_finder
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+    networks:
+      - house_finder_web
 
 
-    postgresql_db:
-      container_name: postgresql_db
-      image: postgres:12
-      restart: always
-      ports:
-        - "5432:5432"
-      environment:
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_DB=${POSTGRES_DB}
-      volumes:
-        - ./postgresql_data:/var/lib/postgresql/data 
-      env_file:
-        - .env
-      networks:
-        - house_finder_web
+  mysql_db:
+    container_name: mysql_db
+    image: mysql:latest
+    restart: always
+    volumes:
+      - ./mysql_db/mysql_data:/var/lib/mysql
+      - ./mysql_db/scripts_sql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    env_file:
+      - .env
+    networks:
+      - house_finder_web
 
-  volumes:
-    postgresql-data:
-    images:
+
+volumes:
+  mysql_data:
+  images:
   ```
 
 11. Modify `.env` :
