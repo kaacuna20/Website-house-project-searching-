@@ -6,6 +6,7 @@ from app.models import User, Project, ProjectUser
 from app.models import db
 from app.auth.forms import ChangePasswordForm
 
+
 profile_bp = Blueprint('profile', __name__)
 
 
@@ -57,14 +58,17 @@ def edit_profile():
     if request.method == 'POST':
         # update the profile photo by user
         uploaded_file = request.files["image_file"]
+        
         # Verify if update any file
         if not uploaded_file:
             flash("No se ha cargado el archivo.")
             return redirect(url_for('profile.edit_profile', current_user=current_user))
+        
         # Verify if extension of file is valid
         elif not allowed_file(uploaded_file.filename):
             flash("Archivo no valido.")
             return redirect(url_for('profile.edit_profile', current_user=current_user))
+        
         # Update the photo on user profile
         elif uploaded_file and allowed_file(uploaded_file.filename):
             filename = secure_filename(uploaded_file.filename)
@@ -87,14 +91,17 @@ def change_password():
     change_password_section = ChangePasswordForm()
     if change_password_section.validate_on_submit():
         written_password = change_password_section.current_password.data
+        
         # Verify if the current password is right
         if not check_password_hash(user_db.password, written_password):
             flash('Contraseña incorrecta, por favor trate de nuevo.')
             return redirect(url_for('profile.change_password', current_user=current_user))
+        
         # Verify if the next password are equal
         if change_password_section.new_password.data != change_password_section.verificate_password.data:
             flash('Las contraseñas no son iguales.')
             return redirect(url_for('profile.change_password', current_user=current_user))
+        
         # update the next password, logout section and user must login with the new password
         else:
             new_password = generate_password_hash(

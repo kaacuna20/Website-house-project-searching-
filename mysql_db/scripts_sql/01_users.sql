@@ -7,10 +7,12 @@ CREATE TABLE IF NOT EXISTS users (
     lastname VARCHAR(100) NOT NULL,
     city VARCHAR(100) NOT NULL,
     photo VARCHAR(200),
-    api_key VARCHAR(200) UNIQUE,
-    api_key_expires DATETIME,
-    token_secret VARCHAR(200) UNIQUE,
-    token_secret_expires DATETIME,
-    is_admin BOOL DEFAULT FALSE NOT NULL
+    public_api_key VARCHAR(200) UNIQUE,
+    public_api_key_expires DATETIME,
+    secret_api_key VARCHAR(200) UNIQUE,
+    secret_api_key_expires DATETIME,
+    admin_api_key VARCHAR(200) UNIQUE,
+    is_admin BOOL DEFAULT FALSE NOT NULL,
+    is_active BOOL DEFAULT TRUE NOT NULL
 );
 

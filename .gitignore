@@ -167,3 +167,4 @@ cython_debug/
 /nginx/ssl/key.pem
 vs-kp-1.pem
 /mysql_db/mysql_data/
+/confident

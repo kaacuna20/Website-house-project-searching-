@@ -30,6 +30,7 @@ def get_all_projects():
     else:
         projects = db.session.execute(db.select(Project)).scalars().all()
 
+    # Pagination
     start = (page - 1) * per_page
     end = start + per_page
     total_pages = (len(projects) + per_page - 1) // per_page

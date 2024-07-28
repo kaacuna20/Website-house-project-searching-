@@ -8,7 +8,7 @@ from app.auth.forms import LoginForm, RegisterForm
 from app.common.mail import send_email
 from smtplib import SMTPException
 from flask import current_app
-
+from app.logs.log import logger
 
 
 user_bp = Blueprint('user', __name__)
@@ -41,6 +41,7 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
+        logger.info(f"user {form.username.data} has registered successfuly!")
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
         return redirect(url_for("index.home"))
@@ -58,12 +59,19 @@ def login():
         if not user:
             flash('El correo o usuario no existe, por favor trate de nuevo.')
             return redirect(url_for('user.register'))
+        
+        if not user.is_active:
+            flash("El Usuario no se encuentra activo!")
+            logger.warning(f"user {form.email_user.data} desactivate tried to login!")
+            return redirect(url_for('user.register'))
+        
         # Password incorrect
         elif not check_password_hash(user.password, password):
             flash('Contraseña incorrecta, por favor trate de nuevo.')
             return redirect(url_for('user.login'))
         else:
             login_user(user)
+            logger.warning(f"user {user.name} login successfuly!")
             return redirect(url_for("index.home"))
     return render_template("login.html", form=form, current_user=current_user)
 
@@ -84,6 +92,11 @@ def forgot_password():
         if not user:
             flash("El correo no se registra en nuestra base de datos, por favor trate de nuevo.")
             return redirect(url_for('user.forgot_password'))
+        
+        if not user.is_active:
+            flash("El Usuario no se encuentra activo, no puede acceder a este recurso!")
+            return redirect(url_for('user.forgot_password'))
+        
         # generate a new and temporal password
         temporal_password = token_urlsafe(8)
         # send the password for email
@@ -103,8 +116,9 @@ def forgot_password():
             db.session.commit()
             flash("Tu nueva contraseña fue enviada a tu correo")
 
-        except SMTPException:
-             flash("Algo salió mal y no se pudo enviar el correo")
+        except SMTPException as ex:
+            flash("Algo salió mal y no se pudo enviar el correo")
+            logger.error(ex)
         return redirect(url_for('user.login'))
     return render_template("forgot_password.html")
 

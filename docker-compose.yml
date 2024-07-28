@@ -16,6 +16,7 @@ services:
     volumes:
       - ./images/api:/app/app/static/images/img-projects
       - ./images/profile:/app/app/static/images/img-profile
+      - ./logs/web-logs:/app/app/logs
     environment:
       - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}
@@ -25,6 +26,7 @@ services:
       - ADMINISTER_EMAIL=${ADMINISTER_EMAIL}
       - DEBUG=False
       - SERVER_NAME=${SERVER_NAME}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     depends_on:
       - mysql_db
     env_file:
@@ -42,9 +44,11 @@ services:
       - "8000:8000"
     volumes:
       - ./images/api:/app/app/static/images/img-projects
+      - ./logs/api-logs:/app/app/logs
     environment:
       - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     depends_on:
       - mysql_db
     env_file:

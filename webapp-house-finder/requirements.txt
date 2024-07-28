@@ -47,3 +47,4 @@ WTForms==3.1.2
 pymysql
 gunicorn
 folium
+cryptography

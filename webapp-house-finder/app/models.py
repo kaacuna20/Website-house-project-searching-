@@ -68,11 +68,13 @@ class User(db.Model, UserMixin):
     lastname: Mapped[str] = mapped_column(String(100))
     city: Mapped[str] = mapped_column(String(100))
     photo: Mapped[str] = mapped_column(String(200), nullable=True)
-    api_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=True)
-    api_key_expires: Mapped[str] = mapped_column(DateTime, nullable=True)
-    token_secret: Mapped[str] = mapped_column(String(200), unique=True, nullable=True)
-    token_secret_expires: Mapped[str] = mapped_column(DateTime, nullable=True)
+    public_api_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=True)
+    public_api_key_expires: Mapped[str] = mapped_column(DateTime, nullable=True)
+    secret_api_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=True)
+    secret_api_key_expires: Mapped[str] = mapped_column(DateTime, nullable=True)
+    admin_api_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=True)
     is_admin: Mapped[bool] = mapped_column(default=False)
+    is_active: Mapped[bool] = mapped_column(default=True)
 
     # Parent relationship: "comment_user" refers to the comment_user property in the Comment class.
     comments = relationship("Comment", back_populates="comment_user")

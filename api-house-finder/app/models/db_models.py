@@ -16,11 +16,13 @@ class User(Base):
     lastname = Column(String(100))
     city = Column(String(100))
     photo = Column(String(200), nullable=True)
-    api_key = Column(String(200), unique=True, nullable=True)
-    api_key_expires = Column(DateTime, nullable=True)
-    token_secret = Column(String(200), nullable=True)
-    token_secret_expires = Column(DateTime, nullable=True)
+    public_api_key = Column(String(200), unique=True, nullable=True)
+    public_api_key_expires = Column(DateTime, nullable=True)
+    secret_api_key = Column(String(200), nullable=True)
+    secret_api_key_expires = Column(DateTime, nullable=True)
+    admin_api_key = Column(String(200), nullable=True)
     is_admin = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
 
 
 class Project(Base):
