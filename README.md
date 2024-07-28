@@ -19,7 +19,7 @@ You can test and enjoy the project in next enlace: http://ec2-3-15-233-85.us-eas
 
 ### Dockerized  House Finder
 
-This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a PostgreSQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
+This project is a Dockerized setup for the House Finder application, consisting of multiple services: a Flask web application, a FastAPI API, an NGINX reverse proxy, and a MySQL database. The services are defined in a `docker-compose.yml` file for easy orchestration and deployment.
 
 ## Table of Contents
 - [Project Structure](#project-structure)
@@ -30,7 +30,7 @@ This project is a Dockerized setup for the House Finder application, consisting 
   - [webapp_house_finder](#webapp_house_finder)
   - [api_house_finder](#api_house_finder)
   - [nginx](#nginx)
-  - [postgresql_db](#postgresql_db)
+  - [mysql_db](#mysql_db)
 - [Networks](#networks)
 - [Volumes](#volumes)
 - [Testing app services](#testing-app-services)
@@ -180,7 +180,7 @@ SERVER_NAME=host
      - `APP_PASSWORD_EMAIL`
      - `ADMINISTER_EMAIL`
      - `DEBUG=False`
-- Dependencies: `postgresql_db`
+- Dependencies: `mysql_db`
 - Network: `house_finder_web`
 
 The Dockerfile configuration is the next:
@@ -222,7 +222,7 @@ CMD ["gunicorn", "run:app", "-w", "4", "--bind", "0.0.0.0:5003"]
 - Environment Variables:
      - `DB_URL`
      - `SECRET_APP_KEY`
-- Dependencies: `postgresql_db`
+- Dependencies: `mysql_db`
 - Network: `house_finder_web`
 The Dockerfile configuration is the next:
 ```init
