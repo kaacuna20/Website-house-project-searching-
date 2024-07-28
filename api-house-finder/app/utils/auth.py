@@ -7,7 +7,7 @@ from os import environ
 from cryptography.fernet import Fernet, InvalidToken
 from app.database import get_db
 from app.models.db_models import User
-from app.logs.log import Logger
+from app.logs_system.log import Logger
 
 logger = Logger()
 

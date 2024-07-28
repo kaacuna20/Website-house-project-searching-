@@ -66,9 +66,12 @@ Website-house-project-searching/
 │      ├── database.py
 │      ├── main.py
 │      ├── models.py
+│      ├── logs/	
+│      │  ├── __init__.py
+│      │  └── log.py                                                                                                                                                                  
 │      ├── helper/
-│      │     ├── download_img.py
-│      │     └── normalize_text.py
+│      │  ├── download_img.py
+│      │  └── normalize_text.py
 │      ├── routers/	
 │      │  ├── __init__.py
 │      │  └── projects.py
@@ -81,39 +84,43 @@ Website-house-project-searching/
 │   ├── Dockerfile
 │   ├── requirements.txt
 │   ├── run.py
-|   ├── config.py
+│   ├── config.py
 │   └── app/
 │      ├── __init__.py
 │      ├── models.py
+│      ├── logs/	
+│      │  ├── __init__.py
+│      │  └── log.py                                                                                                                                                                  
 │      ├── auth/
-│      │     ├── __init__.py
-│      │     └── forms.py
-|      ├── common/
-│      │     ├── __init__.py
-│      │     └── mail.py
+│      │  ├── __init__.py
+│      │  └── forms.py
+│      ├── common/
+│      │  ├── __init__.py
+│      │  └── mail.py
 │      ├── routers/	
-│      │   ├── __init__.py
-|      │   ├── api_documentation.py
-|      │   ├── api.py
-|      │   ├── index.py
-|      │   ├── profile.py
-|      │   ├── user.py
-│      │   └── project.py
-|      ├── templates/
-|      ├── static/
+│      │  ├── __init__.py
+│      │  ├── api_documentation.py
+│      │  ├── api.py
+│      │  ├── index.py
+│      │  ├── profile.py
+│      │  ├── user.py
+│      │  └── project.py
+│      ├── templates/
+│      ├── static/
 │      ├── utils/	
 │      │  ├── __init__.py
 │      │  └── helpers.py
 │      └── test/
-|         ├── __init__.py
-|         ├── conftest.py
-|         ├── test_api_route.py
-|         ├── test_profile_route.py
-|         └── test_user_route.py
+│         ├── __init__.py
+│         ├── conftest.py
+│         ├── test_api_route.py
+│         ├── test_profile_route.py
+│         └── test_user_route.py
 │   
 ├── docker-compose.png  
 ├── docker-compose.yml
 └── .env
+
 
 ```
 

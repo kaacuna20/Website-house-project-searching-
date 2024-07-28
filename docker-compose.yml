@@ -16,7 +16,7 @@ services:
     volumes:
       - ./images/api:/app/app/static/images/img-projects
       - ./images/profile:/app/app/static/images/img-profile
-      - ./logs/web-logs:/app/app/logs
+      - ./logs/web-logs/log.log:/app/app/logs_system/log.log
     environment:
       - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}
@@ -44,7 +44,7 @@ services:
       - "8000:8000"
     volumes:
       - ./images/api:/app/app/static/images/img-projects
-      - ./logs/api-logs:/app/app/logs
+      - ./logs/api-logs/log.log:/app/app/logs_system/log.log
     environment:
       - DB_URL=${DB_URL}
       - SECRET_APP_KEY=${SECRET_APP_KEY}

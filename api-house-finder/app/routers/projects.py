@@ -8,7 +8,7 @@ from app.helper.normalize_text import normalize_text
 from app.models.pydantic_models import ProjectCreate, ProjectResponse, ProjectListResponse
 from cryptography.fernet import Fernet
 from os import environ
-from app.logs.log import Logger
+from app.logs_system.log import Logger
 
 logger = Logger()
 

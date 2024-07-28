@@ -8,7 +8,9 @@ from app.auth.forms import LoginForm, RegisterForm
 from app.common.mail import send_email
 from smtplib import SMTPException
 from flask import current_app
-from app.logs.log import logger
+from app.logs_system.log import Logger
+
+logger = Logger()
 
 
 user_bp = Blueprint('user', __name__)

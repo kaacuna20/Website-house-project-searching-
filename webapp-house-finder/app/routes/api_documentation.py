@@ -2,7 +2,9 @@ from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from cryptography.fernet import Fernet
 from os import environ
-from app.logs.log import logger
+from app.logs_system.log import Logger
+
+logger = Logger()
 
 api_doc_bp = Blueprint('api_doc', __name__)
 

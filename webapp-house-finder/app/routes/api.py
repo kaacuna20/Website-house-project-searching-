@@ -8,7 +8,9 @@ from app.models import db
 from os import environ
 import secrets
 from cryptography.fernet import Fernet
-from app.logs.log import logger
+from app.logs_system.log import Logger
+
+logger = Logger()
 
 api_bp = Blueprint('api', __name__)
 
