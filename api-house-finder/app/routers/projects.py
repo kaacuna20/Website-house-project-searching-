@@ -97,7 +97,7 @@ async def post_new_project(project: ProjectCreate = Depends(), db: Session = Dep
         db.add(new_project)
         db.commit()
         db.refresh(new_project)
-        logger.track_info(f"/api/v1/add-project?{project} - status_code=201")
+        logger.info(f"/api/v1/add-project?{project} - status_code=201")
         return new_project
     except Exception as ex:
         logger.error(ex)

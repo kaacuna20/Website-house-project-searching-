@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS users (
     photo VARCHAR(200),
     public_api_key VARCHAR(200) UNIQUE,
     public_api_key_expires DATETIME,
-    secret_api_key VARCHAR(200) UNIQUE,
+    secret_api_key VARCHAR(500) UNIQUE,
     secret_api_key_expires DATETIME,
-    admin_api_key VARCHAR(200) UNIQUE,
+    admin_api_key VARCHAR(500) UNIQUE,
     is_admin BOOL DEFAULT FALSE NOT NULL,
     is_active BOOL DEFAULT TRUE NOT NULL
 );
-
+CREATE INDEX idx_public_apikey ON users (public_api_key);

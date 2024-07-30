@@ -38,13 +38,13 @@ def generate_token():
     user.public_api_key_expires = datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
     
     secret_api_key = secrets.token_urlsafe(15)
-    encrypted_api_key = cipher_suite.encrypt(secret_api_key.encode('utf-8'))
+    encrypted_api_key = cipher_suite.encrypt(secret_api_key.encode('utf-8')).decode('utf-8')
     user.secret_api_key = encrypted_api_key
     user.secret_api_key_expires = datetime.datetime.now(tz=tz) + datetime.timedelta(days=90)
     
     if user.is_admin:
         admin_api_key = secrets.token_urlsafe(32)
-        encrypted_admin_api= cipher_suite.encrypt(admin_api_key.encode('utf-8'))
+        encrypted_admin_api= cipher_suite.encrypt(admin_api_key.encode('utf-8')).decode('utf-8')
         user.admin_api_key= encrypted_admin_api
         
     

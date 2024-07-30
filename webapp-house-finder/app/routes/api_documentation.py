@@ -28,8 +28,8 @@ def get_api_key():
             decrypted_secret_api_key = cipher_suite.decrypt(secret_api_key).decode('utf-8')
         except Exception as e:
             logger.error(f"Error decrypting secret_api_key: {e}")
-            
-
+    print(current_user.username)
+    print(current_user.secret_api_key)
     # Check and decrypt the admin API key if the user is an admin
     if current_user.is_admin and current_user.admin_api_key:
         try:
