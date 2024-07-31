@@ -44,6 +44,9 @@ Website-house-project-searching/
 ├── images/
 │   ├── api/
 │   └── profile/
+├── logs/
+│   ├── api-logs/
+│   └── web-logs/
 ├── mysql_db/
 │   ├── mysql_data/
 │   └── scripts_sql/
