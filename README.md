@@ -68,8 +68,11 @@ Website-house-project-searching/
 │      ├── __init__.py
 │      ├── database.py
 │      ├── main.py
-│      ├── models.py
-│      ├── logs/	
+│      ├── models/	
+│      │  ├── __init__.py
+│      │  ├── pydantic_models.py
+│      │  └── db_models.py 
+│      ├── logs_system/	
 │      │  ├── __init__.py
 │      │  └── log.py                                                                                                                                                                  
 │      ├── helper/
@@ -91,9 +94,9 @@ Website-house-project-searching/
 │   └── app/
 │      ├── __init__.py
 │      ├── models.py
-│      ├── logs/	
+│      ├── logs_system/	
 │      │  ├── __init__.py
-│      │  └── log.py                                                                                                                                                                  
+│      │  └── log.py                                                                                                                                                                 
 │      ├── auth/
 │      │  ├── __init__.py
 │      │  └── forms.py
@@ -640,6 +643,7 @@ services:
 volumes:
   mysql_data:
   images:
+  logs:
   ```
 
 11. Modify `.env` :
