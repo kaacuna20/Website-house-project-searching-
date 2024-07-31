@@ -179,6 +179,7 @@ SERVER_NAME=host
 - Volumes:
      - `./images/api:/app/app/static/images/img-projects`
      - `./images/profile:/app/app/static/images/img-profile`
+     - `./logs/web-logs/log.log:/app/app/logs_system/log.log`
 - Environment Variables:
      - `DB_URL`
      - `SECRET_APP_KEY`
@@ -226,6 +227,7 @@ CMD ["gunicorn", "run:app", "-w", "4", "--bind", "0.0.0.0:5003"]
 - Ports: `8000:8000`
 - Volumes:
      - `./images/api:/app/app/static/images/img-projects`
+     - `./logs/api-logs/log.log:/app/app/logs_system/log.log`
 - Environment Variables:
      - `DB_URL`
      - `SECRET_APP_KEY`
@@ -286,6 +288,7 @@ EXPOSE 80
 ## Volumes
 - mysql_data: Stores MySQL data.
 - images: Stores images used by the applications.
+- logs: Stores logs of both aplication in log.log file
 
 ## Testing app services
 In same `.env` file in the root directory of your project with the following test variables:
