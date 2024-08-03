@@ -15,7 +15,7 @@
 - There is a section for developer where can read the documentation about the API, whatching the routes to make the requests, the differents responses and restrictions;
 - Developers can generate their apikey to be allowed making requests;
 
-You can test and enjoy the project in next enlace: http://ec2-3-145-129-102.us-east-2.compute.amazonaws.com
+You can test and enjoy the project in next enlace: http://ec2-18-220-174-246.us-east-2.compute.amazonaws.com/
 
 ### Dockerized  House Finder
 
